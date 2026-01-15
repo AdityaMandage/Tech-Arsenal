@@ -1,0 +1,1658 @@
+[
+  {
+    "id": "4624",
+    "source": "Security",
+    "category": "Logon",
+    "level": "Success",
+    "description": "An account was successfully logged on.",
+    "notes": "Use logon_type filter in Kibana. Type 2=Interactive, 3=Network, 10=RDP. Correlate with source IP for lateral movement. Look for logon_type:3 from suspicious IPs. Check logon_process field for validity."
+  },
+  {
+    "id": "4625",
+    "source": "Security",
+    "category": "Logon",
+    "level": "Failure",
+    "description": "An account failed to log on.",
+    "notes": "Alert on >10 failures from single source IP in 5min. Status codes: 0xC000006A=bad password, 0xC0000064=no user, 0xC000006E=account restriction, 0xC0000072=account disabled. Monitor sub_status field. Use: failure_code:* | stats count by source_ip,target_user."
+  },
+  {
+    "id": "4634",
+    "source": "Security",
+    "category": "Logon",
+    "level": "Info",
+    "description": "An account was logged off.",
+    "notes": "Often unreliable for exact duration tracking as sessions may time out."
+  },
+  {
+    "id": "4647",
+    "source": "Security",
+    "category": "Logon",
+    "level": "Info",
+    "description": "User initiated logoff.",
+    "notes": "More reliable than 4634 for interactive sessions."
+  },
+  {
+    "id": "4648",
+    "source": "Security",
+    "category": "Logon",
+    "level": "Info",
+    "description": "A logon was attempted using explicit credentials.",
+    "notes": "RunAs command usage. Attackers use this to escalate privileges."
+  },
+  {
+    "id": "4672",
+    "source": "Security",
+    "category": "Privilege Use",
+    "level": "High",
+    "description": "Special privileges assigned to new logon.",
+    "notes": "Indicates Administrator access. 'SeDebugPrivilege' is a red flag."
+  },
+  {
+    "id": "4776",
+    "source": "Security",
+    "category": "Account Logon",
+    "level": "Info",
+    "description": "Domain controller attempted to validate credentials (NTLM).",
+    "notes": "Used for NTLM authentication. Watch for error code C000006A (Bad Password)."
+  },
+  {
+    "id": "4768",
+    "source": "Security",
+    "category": "Kerberos",
+    "level": "Info",
+    "description": "A Kerberos authentication ticket (TGT) was requested.",
+    "notes": "First step of Kerberos login. Failure code 0x6 means invalid user."
+  },
+  {
+    "id": "4769",
+    "source": "Security",
+    "category": "Kerberos",
+    "level": "Info",
+    "description": "A Kerberos service ticket was requested.",
+    "notes": "Indicates access to a specific service. Look for '0x0' (Success) or failure codes."
+  },
+  {
+    "id": "4771",
+    "source": "Security",
+    "category": "Kerberos",
+    "level": "Failure",
+    "description": "Kerberos pre-authentication failed.",
+    "notes": "Often replaces 4768 failures in newer Windows versions. Critical for detecting bad passwords."
+  },
+  {
+    "id": "4720",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "High",
+    "description": "A user account was created.",
+    "notes": "Critical! Verify if this was authorized. Attackers create backdoors this way."
+  },
+  {
+    "id": "4722",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Medium",
+    "description": "A user account was enabled.",
+    "notes": "Check if a dormant account was suddenly enabled."
+  },
+  {
+    "id": "4723",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Info",
+    "description": "An attempt was made to change an account's password.",
+    "notes": "User attempted change."
+  },
+  {
+    "id": "4724",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "High",
+    "description": "An attempt was made to reset an account's password.",
+    "notes": "CRITICAL for account takeover detection. Monitor who reset whose password (subject vs target_user). Alert on: non-admin resetting admin/service account passwords, password resets followed by logon attempts (4624) within 5 min. Correlate: 4724 -> 4720 (account creation). Use: event_id:4724 target_user:admin* | stats count by subject_user_name."
+  },
+  {
+    "id": "4725",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Info",
+    "description": "A user account was disabled.",
+    "notes": "Standard lifecycle, but suspicious if done to security accounts."
+  },
+  {
+    "id": "4726",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "High",
+    "description": "A user account was deleted.",
+    "notes": "Adversaries may delete logs or accounts to hide tracks."
+  },
+  {
+    "id": "4688",
+    "source": "Security",
+    "category": "Process Tracking",
+    "level": "Medium",
+    "description": "A new process has been created.",
+    "notes": "MUST enable 'Include command line' via GPO (Process Creation). Correlate parent_process_name with process_name. Hunt for: cmd.exe/powershell spawned by unusual parents (Word, Excel, Browser). Use: process_name:powershell.exe parent_process:winword.exe. Critical for malware staging."
+  },
+  {
+    "id": "4698",
+    "source": "Security",
+    "category": "Task Scheduler",
+    "level": "High",
+    "description": "A scheduled task was created.",
+    "notes": "HIGH priority for persistence hunting. Extract task_name from XML in event_data. Alert on: SYSTEM/NETWORK SERVICE creating tasks, or tasks running cmd.exe/powershell. Monitor task_content field for suspicious commands. Query: event_id:4698 task_content:*powershell* - Often used for C2 persistence."
+  },
+  {
+    "id": "4699",
+    "source": "Security",
+    "category": "Task Scheduler",
+    "level": "Info",
+    "description": "A scheduled task was deleted.",
+    "notes": "Cleaning up tracks."
+  },
+  {
+    "id": "4700",
+    "source": "Security",
+    "category": "Task Scheduler",
+    "level": "Info",
+    "description": "A scheduled task was enabled.",
+    "notes": "Re-enabling a malicious task."
+  },
+  {
+    "id": "4701",
+    "source": "Security",
+    "category": "Task Scheduler",
+    "level": "Info",
+    "description": "A scheduled task was disabled.",
+    "notes": "Disabling security tools."
+  },
+  {
+    "id": "4702",
+    "source": "Security",
+    "category": "Task Scheduler",
+    "level": "Medium",
+    "description": "A scheduled task was updated.",
+    "notes": "Attackers may hijack legitimate tasks."
+  },
+  {
+    "id": "4798",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A user's local group membership was enumerated.",
+    "notes": "Reconnaissance activity. Attackers looking for 'who is admin'."
+  },
+  {
+    "id": "4799",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A security-enabled local group membership was enumerated.",
+    "notes": "Reconnaissance. 'net localgroup administrators' generates this."
+  },
+  {
+    "id": "5140",
+    "source": "Security",
+    "category": "Share Access",
+    "level": "Info",
+    "description": "A network share object was accessed.",
+    "notes": "Lateral movement indicator. Source IP is critical here."
+  },
+  {
+    "id": "5145",
+    "source": "Security",
+    "category": "Share Access",
+    "level": "Medium",
+    "description": "A network share object was checked for access.",
+    "notes": "Detailed share logging. Shows exact file path accessed."
+  },
+  {
+    "id": "1102",
+    "source": "Security",
+    "category": "Log Clear",
+    "level": "Critical",
+    "description": "The audit log was cleared.",
+    "notes": "IMMEDIATE ALERT. Check who cleared logs (subject_user_name), when (timestamp), and from which host. Correlate with timeline: look for suspicious events BEFORE 1102. This is cover-up activity. Also monitor for 104 (System log clear). Create alert: event_id:(1102 OR 104) | stats count by host,subject_user_name - Attacker TTPs often end with log clearing."
+  },
+  {
+    "id": "104",
+    "source": "System",
+    "category": "Log Clear",
+    "level": "Critical",
+    "description": "The log file was cleared.",
+    "notes": "Applies to System or Application logs. Suspicious."
+  },
+  {
+    "id": "7045",
+    "source": "System",
+    "category": "Service",
+    "level": "High",
+    "description": "A new service was installed in the system.",
+    "notes": "Persistence. PsExec and malware install services to run as System."
+  },
+  {
+    "id": "7034",
+    "source": "System",
+    "category": "Service",
+    "level": "Info",
+    "description": "The service terminated unexpectedly.",
+    "notes": "Service crash. Could indicate exploit attempt."
+  },
+  {
+    "id": "7009",
+    "source": "System",
+    "category": "Service",
+    "level": "Info",
+    "description": "Timeout reached while waiting for service to connect.",
+    "notes": "Performance or DoS indication."
+  },
+  {
+    "id": "6005",
+    "source": "System",
+    "category": "Startup",
+    "level": "Info",
+    "description": "The Event Log service was started.",
+    "notes": "Indicates System Boot."
+  },
+  {
+    "id": "6006",
+    "source": "System",
+    "category": "Shutdown",
+    "level": "Info",
+    "description": "The Event Log service was stopped.",
+    "notes": "Indicates System Shutdown."
+  },
+  {
+    "id": "400",
+    "source": "PowerShell",
+    "category": "Engine",
+    "level": "Info",
+    "description": "Engine state is changed from None to Available.",
+    "notes": "PowerShell session started. Check 'HostApplication' for the command."
+  },
+  {
+    "id": "600",
+    "source": "PowerShell",
+    "category": "Provider",
+    "level": "Info",
+    "description": "Provider 'x' is Started.",
+    "notes": "Shows capabilities loaded (Registry, WSMan, etc)."
+  },
+  {
+    "id": "4103",
+    "source": "PowerShell",
+    "category": "Module",
+    "level": "Medium",
+    "description": "Module Logging: Pipeline execution.",
+    "notes": "Logs variable initialization and command invocation."
+  },
+  {
+    "id": "4104",
+    "source": "PowerShell",
+    "category": "ScriptBlock",
+    "level": "Critical",
+    "description": "Script Block Logging.",
+    "notes": "GOLD STANDARD for PowerShell hunting. Extract script_block_text field. Search for: Invoke-WebRequest, New-Object, DownloadString, Reflection.Assembly, IEX. IMPORTANT: 4104 can be huge - aggregate by script_block_text | head 1000. Enable in GPO: Computer > Admin > Event Viewer > Windows Logs > Applications and Services > PowerShell > Operational. Set level=Verbose or Warning."
+  },
+  {
+    "id": "106",
+    "source": "TaskScheduler",
+    "category": "Job",
+    "level": "Info",
+    "description": "User registered the Task Scheduler task.",
+    "notes": "New task created."
+  },
+  {
+    "id": "141",
+    "source": "TaskScheduler",
+    "category": "Job",
+    "level": "Info",
+    "description": "User deleted Task Scheduler task.",
+    "notes": "Task deletion."
+  },
+  {
+    "id": "200",
+    "source": "TaskScheduler",
+    "category": "Job",
+    "level": "Info",
+    "description": "Task Scheduler executed a task.",
+    "notes": "Shows the action/binary executed."
+  },
+  {
+    "id": "201",
+    "source": "TaskScheduler",
+    "category": "Job",
+    "level": "Info",
+    "description": "Task Scheduler completed a task.",
+    "notes": "Task finished successfully."
+  },
+  {
+    "id": "1116",
+    "source": "Defender",
+    "category": "Antivirus",
+    "level": "High",
+    "description": "Malware detected.",
+    "notes": "Defender found something. Immediate investigation needed."
+  },
+  {
+    "id": "1117",
+    "source": "Defender",
+    "category": "Antivirus",
+    "level": "High",
+    "description": "Action performed to protect system.",
+    "notes": "Defender blocked/quarantined the threat."
+  },
+  {
+    "id": "5001",
+    "source": "Defender",
+    "category": "Antivirus",
+    "level": "Critical",
+    "description": "Real-time protection is disabled.",
+    "notes": "Attacker disabling security controls."
+  },
+  {
+    "id": "21",
+    "source": "RDP (LocalSessionMgr)",
+    "category": "Remote Access",
+    "level": "Info",
+    "description": "Remote Desktop Services: Session logon succeeded.",
+    "notes": "User successfully authenticated via RDP."
+  },
+  {
+    "id": "22",
+    "source": "RDP (LocalSessionMgr)",
+    "category": "Remote Access",
+    "level": "Info",
+    "description": "Remote Desktop Services: Shell start notification.",
+    "notes": "Desktop is loading for the user."
+  },
+  {
+    "id": "23",
+    "source": "RDP (LocalSessionMgr)",
+    "category": "Remote Access",
+    "level": "Info",
+    "description": "Remote Desktop Services: Session logoff succeeded.",
+    "notes": "User logged off RDP."
+  },
+  {
+    "id": "24",
+    "source": "RDP (LocalSessionMgr)",
+    "category": "Remote Access",
+    "level": "Info",
+    "description": "Remote Desktop Services: Session disconnected.",
+    "notes": "User closed window but session remains active (cached)."
+  },
+  {
+    "id": "25",
+    "source": "RDP (LocalSessionMgr)",
+    "category": "Remote Access",
+    "level": "Info",
+    "description": "Remote Desktop Services: Session reconnection.",
+    "notes": "User re-attached to an existing session."
+  },
+  {
+    "id": "1149",
+    "source": "RDP (RemoteConnMgr)",
+    "category": "Remote Access",
+    "level": "Info",
+    "description": "User authentication succeeded.",
+    "notes": "Network authentication success. Occurs before session creation."
+  },
+  {
+    "id": "261",
+    "source": "RDP (RemoteConnMgr)",
+    "category": "Remote Access",
+    "level": "Info",
+    "description": "Listener RDP-Tcp received a connection.",
+    "notes": "Someone connected to port 3389."
+  },
+  {
+    "id": "1029",
+    "source": "RDP (Client)",
+    "category": "Remote Access",
+    "level": "Info",
+    "description": "Logon hash created.",
+    "notes": "Created on the SOURCE computer initiating the RDP connection."
+  },
+  {
+    "id": "1",
+    "source": "Sysmon",
+    "category": "Process",
+    "level": "Medium",
+    "description": "Process creation.",
+    "notes": "Includes hashes and command lines. Superior to 4688."
+  },
+  {
+    "id": "3",
+    "source": "Sysmon",
+    "category": "Network",
+    "level": "Info",
+    "description": "Network connection.",
+    "notes": "Logs every TCP/UDP connection. Very noisy but detailed."
+  },
+  {
+    "id": "7",
+    "source": "Sysmon",
+    "category": "Image Load",
+    "level": "Medium",
+    "description": "Image loaded.",
+    "notes": "DLL hijacking detection."
+  },
+  {
+    "id": "8",
+    "source": "Sysmon",
+    "category": "Process",
+    "level": "High",
+    "description": "CreateRemoteThread.",
+    "notes": "Code injection into another process. Malware behavior."
+  },
+  {
+    "id": "11",
+    "source": "Sysmon",
+    "category": "File",
+    "level": "Medium",
+    "description": "FileCreate.",
+    "notes": "Malware dropping files."
+  },
+  {
+    "id": "12",
+    "source": "Sysmon",
+    "category": "Registry",
+    "level": "Medium",
+    "description": "Registry key/value created or deleted.",
+    "notes": "Persistence mechanism detection."
+  },
+  {
+    "id": "13",
+    "source": "Sysmon",
+    "category": "Registry",
+    "level": "Medium",
+    "description": "Registry value modification.",
+    "notes": "Settings changes."
+  },
+  {
+    "id": "4656",
+    "source": "Security",
+    "category": "Object Access",
+    "level": "Info",
+    "description": "A handle to an object was requested.",
+    "notes": "Precursor to access. Noisy."
+  },
+  {
+    "id": "4663",
+    "source": "Security",
+    "category": "Object Access",
+    "level": "Info",
+    "description": "An attempt was made to access an object.",
+    "notes": "Shows actual Read/Write/Delete action on a file/registry key."
+  },
+  {
+    "id": "4719",
+    "source": "Security",
+    "category": "Policy",
+    "level": "High",
+    "description": "System audit policy was changed.",
+    "notes": "Attackers disabling logging to hide."
+  },
+  {
+    "id": "8001",
+    "source": "WLAN",
+    "category": "Network",
+    "level": "Info",
+    "description": "WLAN service successfully connected.",
+    "notes": "Wi-Fi connection successful."
+  },
+  {
+    "id": "8002",
+    "source": "WLAN",
+    "category": "Network",
+    "level": "Failure",
+    "description": "WLAN service failed to connect.",
+    "notes": "Failed Wi-Fi connection."
+  },
+  {
+    "id": "4626",
+    "source": "Security",
+    "category": "Logon",
+    "level": "Info",
+    "description": "User/Device claims information.",
+    "notes": "Additional information about user context during logon."
+  },
+  {
+    "id": "4627",
+    "source": "Security",
+    "category": "Logon",
+    "level": "Info",
+    "description": "Group membership information.",
+    "notes": "Shows groups assigned to the user."
+  },
+  {
+    "id": "4657",
+    "source": "Security",
+    "category": "Object Access",
+    "level": "Info",
+    "description": "A registry value was modified.",
+    "notes": "Tracks registry changes: created, modified, or deleted values."
+  },
+  {
+    "id": "4658",
+    "source": "Security",
+    "category": "Object Access",
+    "level": "Info",
+    "description": "The handle to an object was closed.",
+    "notes": "Closes the registry or file access session."
+  },
+  {
+    "id": "4659",
+    "source": "Security",
+    "category": "Object Access",
+    "level": "Info",
+    "description": "A handle to an object was requested with intent to delete.",
+    "notes": "Precursor to deletion of files or registry keys."
+  },
+  {
+    "id": "4660",
+    "source": "Security",
+    "category": "Object Access",
+    "level": "Info",
+    "description": "An object was deleted.",
+    "notes": "File or registry key deleted."
+  },
+  {
+    "id": "4661",
+    "source": "Security",
+    "category": "Object Access",
+    "level": "Info",
+    "description": "A handle to an object was requested.",
+    "notes": "Similar to 4656 - precursor to object access."
+  },
+  {
+    "id": "4662",
+    "source": "Security",
+    "category": "Object Access",
+    "level": "Info",
+    "description": "An operation was performed on an object.",
+    "notes": "Audit trail for object operations."
+  },
+  {
+    "id": "4664",
+    "source": "Security",
+    "category": "Object Access",
+    "level": "Info",
+    "description": "An attempt was made to create a hard link.",
+    "notes": "File system hardlink creation attempt."
+  },
+  {
+    "id": "4670",
+    "source": "Security",
+    "category": "Object Access",
+    "level": "Info",
+    "description": "Permissions on an object were changed.",
+    "notes": "ACL (Access Control List) modifications."
+  },
+  {
+    "id": "4673",
+    "source": "Security",
+    "category": "Privilege Use",
+    "level": "Info",
+    "description": "A privileged service was called.",
+    "notes": "Tracking use of system privileges."
+  },
+  {
+    "id": "4674",
+    "source": "Security",
+    "category": "Privilege Use",
+    "level": "Info",
+    "description": "An operation was attempted on a privileged object.",
+    "notes": "Attempts to modify privileged objects."
+  },
+  {
+    "id": "4689",
+    "source": "Security",
+    "category": "Process Tracking",
+    "level": "Medium",
+    "description": "A process has exited.",
+    "notes": "Correlates with 4688 to track process duration and termination."
+  },
+  {
+    "id": "4690",
+    "source": "Security",
+    "category": "Process Tracking",
+    "level": "Info",
+    "description": "An attempt was made to duplicate a handle to an object.",
+    "notes": "Process handle duplication - can indicate privilege escalation."
+  },
+  {
+    "id": "4691",
+    "source": "Security",
+    "category": "Process Tracking",
+    "level": "Info",
+    "description": "Indirect access to an object was requested.",
+    "notes": "Indirect file or registry access."
+  },
+  {
+    "id": "4692",
+    "source": "Security",
+    "category": "Credential Management",
+    "level": "High",
+    "description": "Backup of data protection master key was attempted.",
+    "notes": "DPAPI key backup - sensitive operation."
+  },
+  {
+    "id": "4693",
+    "source": "Security",
+    "category": "Credential Management",
+    "level": "High",
+    "description": "Recovery of data protection master key was attempted.",
+    "notes": "DPAPI key recovery - sensitive operation."
+  },
+  {
+    "id": "4696",
+    "source": "Security",
+    "category": "Process Tracking",
+    "level": "Info",
+    "description": "A primary token was assigned to process.",
+    "notes": "Process token assignment."
+  },
+  {
+    "id": "4697",
+    "source": "Security",
+    "category": "Service",
+    "level": "High",
+    "description": "A service was installed in the system.",
+    "notes": "Persistence through service installation. Similar to 7045 but from Security log."
+  },
+  {
+    "id": "4703",
+    "source": "Security",
+    "category": "Privilege Use",
+    "level": "Info",
+    "description": "A token right was adjusted.",
+    "notes": "User rights token modification."
+  },
+  {
+    "id": "4704",
+    "source": "Security",
+    "category": "Policy",
+    "level": "Medium",
+    "description": "A user right was assigned.",
+    "notes": "Administrative privilege assignment to a user."
+  },
+  {
+    "id": "4705",
+    "source": "Security",
+    "category": "Policy",
+    "level": "Medium",
+    "description": "A user right was removed.",
+    "notes": "Administrative privilege revoked from a user."
+  },
+  {
+    "id": "4706",
+    "source": "Security",
+    "category": "Trust",
+    "level": "Medium",
+    "description": "A new trust was created to a domain.",
+    "notes": "Domain trust relationship established."
+  },
+  {
+    "id": "4707",
+    "source": "Security",
+    "category": "Trust",
+    "level": "Medium",
+    "description": "A trust to a domain was removed.",
+    "notes": "Domain trust relationship removed."
+  },
+  {
+    "id": "4713",
+    "source": "Security",
+    "category": "Kerberos",
+    "level": "Info",
+    "description": "Kerberos policy was changed.",
+    "notes": "Kerberos security policy modification."
+  },
+  {
+    "id": "4714",
+    "source": "Security",
+    "category": "Policy",
+    "level": "Medium",
+    "description": "Encrypted data recovery policy was changed.",
+    "notes": "DPAPI recovery policy change."
+  },
+  {
+    "id": "4715",
+    "source": "Security",
+    "category": "Policy",
+    "level": "Medium",
+    "description": "The audit policy (SACL) on an object was changed.",
+    "notes": "Object audit policy modifications."
+  },
+  {
+    "id": "4716",
+    "source": "Security",
+    "category": "Trust",
+    "level": "Medium",
+    "description": "Trusted domain information was modified.",
+    "notes": "Forest trust or domain trust changes."
+  },
+  {
+    "id": "4717",
+    "source": "Security",
+    "category": "Policy",
+    "level": "High",
+    "description": "System security access was granted to an account.",
+    "notes": "Account granted system-level access rights."
+  },
+  {
+    "id": "4718",
+    "source": "Security",
+    "category": "Policy",
+    "level": "High",
+    "description": "System security access was removed from an account.",
+    "notes": "Account removed from system-level access rights."
+  },
+  {
+    "id": "4727",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A security-enabled global group was created.",
+    "notes": "Domain group creation."
+  },
+  {
+    "id": "4728",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A member was added to a security-enabled global group.",
+    "notes": "User added to domain group - watch for admins added to sensitive groups."
+  },
+  {
+    "id": "4729",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A member was removed from a security-enabled global group.",
+    "notes": "User removed from domain group."
+  },
+  {
+    "id": "4730",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A security-enabled global group was deleted.",
+    "notes": "Domain group deletion."
+  },
+  {
+    "id": "4731",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A security-enabled local group was created.",
+    "notes": "Local group creation."
+  },
+  {
+    "id": "4732",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A member was added to a security-enabled local group.",
+    "notes": "User added to local group."
+  },
+  {
+    "id": "4733",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A member was removed from a security-enabled local group.",
+    "notes": "User removed from local group."
+  },
+  {
+    "id": "4734",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A security-enabled local group was deleted.",
+    "notes": "Local group deletion."
+  },
+  {
+    "id": "4735",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A security-enabled local group was changed.",
+    "notes": "Local group properties modified."
+  },
+  {
+    "id": "4737",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A security-enabled global group was changed.",
+    "notes": "Domain group properties modified."
+  },
+  {
+    "id": "4738",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Medium",
+    "description": "A user account was changed.",
+    "notes": "User properties modified (name, email, permissions, etc)."
+  },
+  {
+    "id": "4739",
+    "source": "Security",
+    "category": "Policy",
+    "level": "High",
+    "description": "Domain Policy was changed.",
+    "notes": "Critical domain policy modifications."
+  },
+  {
+    "id": "4740",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Medium",
+    "description": "A user account was locked out.",
+    "notes": "Account locked due to failed login attempts - watch for brute force attacks."
+  },
+  {
+    "id": "4741",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Medium",
+    "description": "A computer account was created.",
+    "notes": "New computer added to domain."
+  },
+  {
+    "id": "4742",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Medium",
+    "description": "A computer account was changed.",
+    "notes": "Computer properties modified."
+  },
+  {
+    "id": "4743",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Medium",
+    "description": "A computer account was deleted.",
+    "notes": "Computer removed from domain."
+  },
+  {
+    "id": "4754",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A security-enabled universal group was created.",
+    "notes": "Universal group creation (multi-domain)."
+  },
+  {
+    "id": "4755",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A security-enabled universal group was changed.",
+    "notes": "Universal group modified."
+  },
+  {
+    "id": "4756",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A member was added to a security-enabled universal group.",
+    "notes": "User added to universal group."
+  },
+  {
+    "id": "4757",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A member was removed from a security-enabled universal group.",
+    "notes": "User removed from universal group."
+  },
+  {
+    "id": "4758",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A security-enabled universal group was deleted.",
+    "notes": "Universal group deletion."
+  },
+  {
+    "id": "4764",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A group's type was changed.",
+    "notes": "Group scope changed (local to global, etc)."
+  },
+  {
+    "id": "4765",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Medium",
+    "description": "SID History was added to an account.",
+    "notes": "User migration tracking - attacker persistence technique."
+  },
+  {
+    "id": "4766",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Medium",
+    "description": "An attempt to add SID History to an account failed.",
+    "notes": "Failed SID History addition."
+  },
+  {
+    "id": "4767",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Medium",
+    "description": "A user account was unlocked.",
+    "notes": "Locked account was unlocked."
+  },
+  {
+    "id": "4770",
+    "source": "Security",
+    "category": "Kerberos",
+    "level": "Info",
+    "description": "A Kerberos service ticket was renewed.",
+    "notes": "Ticket renewal during session."
+  },
+  {
+    "id": "4772",
+    "source": "Security",
+    "category": "Kerberos",
+    "level": "Failure",
+    "description": "A Kerberos authentication ticket request failed.",
+    "notes": "TGT request failure."
+  },
+  {
+    "id": "4773",
+    "source": "Security",
+    "category": "Kerberos",
+    "level": "Failure",
+    "description": "A Kerberos service ticket request failed.",
+    "notes": "Service ticket request failure."
+  },
+  {
+    "id": "4774",
+    "source": "Security",
+    "category": "Account Logon",
+    "level": "Info",
+    "description": "An account was mapped for logon.",
+    "notes": "Account mapping for certificate or smartcard logon."
+  },
+  {
+    "id": "4775",
+    "source": "Security",
+    "category": "Account Logon",
+    "level": "Failure",
+    "description": "An account could not be mapped for logon.",
+    "notes": "Failed certificate/smartcard account mapping."
+  },
+  {
+    "id": "4777",
+    "source": "Security",
+    "category": "Account Logon",
+    "level": "Failure",
+    "description": "The domain controller failed to validate the credentials for an account.",
+    "notes": "NTLM authentication failure on DC."
+  },
+  {
+    "id": "4778",
+    "source": "Security",
+    "category": "Session",
+    "level": "Info",
+    "description": "A session was reconnected to a Window Station.",
+    "notes": "User reconnected to their session."
+  },
+  {
+    "id": "4779",
+    "source": "Security",
+    "category": "Session",
+    "level": "Info",
+    "description": "A session was disconnected from a Window Station.",
+    "notes": "User disconnected from session."
+  },
+  {
+    "id": "4780",
+    "source": "Security",
+    "category": "Policy",
+    "level": "High",
+    "description": "The ACL was set on accounts which are members of administrators groups.",
+    "notes": "ACL change on admin accounts."
+  },
+  {
+    "id": "4781",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Medium",
+    "description": "The name of an account was changed.",
+    "notes": "User or computer account renamed."
+  },
+  {
+    "id": "4782",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "High",
+    "description": "The password hash an account was accessed.",
+    "notes": "CRITICAL: Direct password hash access - potential credential dumping."
+  },
+  {
+    "id": "4794",
+    "source": "Security",
+    "category": "Account Mgmt",
+    "level": "Critical",
+    "description": "An attempt was made to set the Directory Services Restore Mode administrator password.",
+    "notes": "DSRM password change - extremely sensitive."
+  },
+  {
+    "id": "4800",
+    "source": "Security",
+    "category": "Logon",
+    "level": "Info",
+    "description": "The workstation was locked.",
+    "notes": "User locked their workstation."
+  },
+  {
+    "id": "4801",
+    "source": "Security",
+    "category": "Logon",
+    "level": "Info",
+    "description": "The workstation was unlocked.",
+    "notes": "User unlocked their workstation."
+  },
+  {
+    "id": "4802",
+    "source": "Security",
+    "category": "Logon",
+    "level": "Info",
+    "description": "The screen saver was invoked.",
+    "notes": "Screen saver activated."
+  },
+  {
+    "id": "4803",
+    "source": "Security",
+    "category": "Logon",
+    "level": "Info",
+    "description": "The screen saver was dismissed.",
+    "notes": "Screen saver deactivated."
+  },
+  {
+    "id": "4816",
+    "source": "Security",
+    "category": "RPC",
+    "level": "Warning",
+    "description": "RPC detected an integrity violation while decrypting an incoming message.",
+    "notes": "Potential RPC tampering."
+  },
+  {
+    "id": "4817",
+    "source": "Security",
+    "category": "Policy",
+    "level": "Medium",
+    "description": "Auditing settings on object were changed.",
+    "notes": "SACL modifications."
+  },
+  {
+    "id": "4819",
+    "source": "Security",
+    "category": "Policy",
+    "level": "High",
+    "description": "Central Access Policies on the machine have been changed.",
+    "notes": "CAP policy modifications - sensitive."
+  },
+  {
+    "id": "4822",
+    "source": "Security",
+    "category": "Account Logon",
+    "level": "Failure",
+    "description": "NTLM authentication failed because the account was a member of the Protected User group.",
+    "notes": "Protected user logon attempt failed."
+  },
+  {
+    "id": "4824",
+    "source": "Security",
+    "category": "Kerberos",
+    "level": "Failure",
+    "description": "Kerberos preauthentication by using DES or RC4 failed.",
+    "notes": "Weak crypto rejected by Protected User."
+  },
+  {
+    "id": "4825",
+    "source": "Security",
+    "category": "Remote Access",
+    "level": "Failure",
+    "description": "A user was denied access to Remote Desktop.",
+    "notes": "RDP access denied."
+  },
+  {
+    "id": "4865",
+    "source": "Security",
+    "category": "Trust",
+    "level": "Medium",
+    "description": "A trusted forest information entry was added.",
+    "notes": "Forest trust relationship created."
+  },
+  {
+    "id": "4866",
+    "source": "Security",
+    "category": "Trust",
+    "level": "Medium",
+    "description": "A trusted forest information entry was removed.",
+    "notes": "Forest trust relationship removed."
+  },
+  {
+    "id": "4867",
+    "source": "Security",
+    "category": "Trust",
+    "level": "Medium",
+    "description": "A trusted forest information entry was modified.",
+    "notes": "Forest trust relationship modified."
+  },
+  {
+    "id": "4944",
+    "source": "Security",
+    "category": "Firewall",
+    "level": "Info",
+    "description": "The following policy was active when the Windows Firewall started.",
+    "notes": "Firewall policy at startup."
+  },
+  {
+    "id": "4945",
+    "source": "Security",
+    "category": "Firewall",
+    "level": "Info",
+    "description": "A rule was listed when the Windows Firewall started.",
+    "notes": "Firewall rules enumeration."
+  },
+  {
+    "id": "4946",
+    "source": "Security",
+    "category": "Firewall",
+    "level": "Medium",
+    "description": "A change has been made to Windows Firewall exception list. A rule was added.",
+    "notes": "Firewall rule added - may indicate backdoor."
+  },
+  {
+    "id": "4947",
+    "source": "Security",
+    "category": "Firewall",
+    "level": "Medium",
+    "description": "A change has been made to Windows Firewall exception list. A rule was modified.",
+    "notes": "Firewall rule modified."
+  },
+  {
+    "id": "4948",
+    "source": "Security",
+    "category": "Firewall",
+    "level": "Medium",
+    "description": "A change has been made to Windows Firewall exception list. A rule was deleted.",
+    "notes": "Firewall rule deleted."
+  },
+  {
+    "id": "4949",
+    "source": "Security",
+    "category": "Firewall",
+    "level": "Medium",
+    "description": "Windows Firewall settings were restored to the default values.",
+    "notes": "Firewall reset to defaults."
+  },
+  {
+    "id": "4950",
+    "source": "Security",
+    "category": "Firewall",
+    "level": "Medium",
+    "description": "A Windows Firewall setting has changed.",
+    "notes": "General firewall setting change."
+  },
+  {
+    "id": "5024",
+    "source": "Security",
+    "category": "Firewall",
+    "level": "Info",
+    "description": "The Windows Firewall Service has started successfully.",
+    "notes": "Firewall service startup."
+  },
+  {
+    "id": "5025",
+    "source": "Security",
+    "category": "Firewall",
+    "level": "High",
+    "description": "The Windows Firewall Service has been stopped.",
+    "notes": "Firewall service stopped - security concern."
+  },
+  {
+    "id": "5031",
+    "source": "Security",
+    "category": "Firewall",
+    "level": "High",
+    "description": "The Windows Firewall Service blocked an application from accepting incoming connections.",
+    "notes": "Inbound connection blocked by firewall."
+  },
+  {
+    "id": "5038",
+    "source": "Security",
+    "category": "Integrity",
+    "level": "Critical",
+    "description": "Code integrity determined that the image hash of a file is not valid.",
+    "notes": "File integrity violation - potential rootkit or compromise."
+  },
+  {
+    "id": "5136",
+    "source": "Security",
+    "category": "Directory Service",
+    "level": "Medium",
+    "description": "A directory service object was modified.",
+    "notes": "AD object change."
+  },
+  {
+    "id": "5137",
+    "source": "Security",
+    "category": "Directory Service",
+    "level": "Medium",
+    "description": "A directory service object was created.",
+    "notes": "AD object creation."
+  },
+  {
+    "id": "5138",
+    "source": "Security",
+    "category": "Directory Service",
+    "level": "Medium",
+    "description": "A directory service object was undeleted.",
+    "notes": "AD object restored from trash."
+  },
+  {
+    "id": "5139",
+    "source": "Security",
+    "category": "Directory Service",
+    "level": "Medium",
+    "description": "A directory service object was moved.",
+    "notes": "AD object moved in directory structure."
+  },
+  {
+    "id": "5141",
+    "source": "Security",
+    "category": "Directory Service",
+    "level": "Medium",
+    "description": "A directory service object was deleted.",
+    "notes": "AD object deletion."
+  },
+  {
+    "id": "5142",
+    "source": "Security",
+    "category": "Share Access",
+    "level": "Medium",
+    "description": "A network share object was added.",
+    "notes": "Network share created."
+  },
+  {
+    "id": "5143",
+    "source": "Security",
+    "category": "Share Access",
+    "level": "Medium",
+    "description": "A network share object was modified.",
+    "notes": "Network share properties changed."
+  },
+  {
+    "id": "5144",
+    "source": "Security",
+    "category": "Share Access",
+    "level": "Medium",
+    "description": "A network share object was deleted.",
+    "notes": "Network share deleted."
+  },
+  {
+    "id": "2",
+    "source": "Sysmon",
+    "category": "Process",
+    "level": "Medium",
+    "description": "A process changed a file creation time.",
+    "notes": "Timestamp tampering attempt."
+  },
+  {
+    "id": "5",
+    "source": "Sysmon",
+    "category": "Process",
+    "level": "Medium",
+    "description": "Process terminated.",
+    "notes": "Process exit tracking."
+  },
+  {
+    "id": "6",
+    "source": "Sysmon",
+    "category": "Driver",
+    "level": "High",
+    "description": "Driver loaded.",
+    "notes": "Kernel driver loading - potential rootkit."
+  },
+  {
+    "id": "9",
+    "source": "Sysmon",
+    "category": "Process",
+    "level": "High",
+    "description": "RawAccessRead.",
+    "notes": "Raw disk access - potential malware activity."
+  },
+  {
+    "id": "10",
+    "source": "Sysmon",
+    "category": "Process",
+    "level": "High",
+    "description": "ProcessAccess.",
+    "notes": "Process memory access - injection detection."
+  },
+  {
+    "id": "14",
+    "source": "Sysmon",
+    "category": "Registry",
+    "level": "Medium",
+    "description": "Registry object added or deleted.",
+    "notes": "Registry key creation/deletion."
+  },
+  {
+    "id": "15",
+    "source": "Sysmon",
+    "category": "File",
+    "level": "Medium",
+    "description": "FileCreateStreamHash.",
+    "notes": "Alternate data stream creation."
+  },
+  {
+    "id": "17",
+    "source": "Sysmon",
+    "category": "Pipe",
+    "level": "Medium",
+    "description": "Pipe Created.",
+    "notes": "Named pipe creation - IPC communication."
+  },
+  {
+    "id": "18",
+    "source": "Sysmon",
+    "category": "Pipe",
+    "level": "Medium",
+    "description": "Pipe Connected.",
+    "notes": "Named pipe connection established."
+  },
+  {
+    "id": "19",
+    "source": "Sysmon",
+    "category": "WMI",
+    "level": "High",
+    "description": "WmiEvent (WmiEventFilter activity detected).",
+    "notes": "WMI event subscription - possible persistence."
+  },
+  {
+    "id": "20",
+    "source": "Sysmon",
+    "category": "WMI",
+    "level": "High",
+    "description": "WmiEvent (WmiEventConsumer activity detected).",
+    "notes": "WMI consumer - possible persistence."
+  },
+  {
+    "id": "21",
+    "source": "Sysmon",
+    "category": "WMI",
+    "level": "High",
+    "description": "WmiEvent (WmiEventConsumerToFilter activity detected).",
+    "notes": "WMI binding - possible persistence."
+  },
+  {
+    "id": "22",
+    "source": "Sysmon",
+    "category": "DNS",
+    "level": "Medium",
+    "description": "DNSEvent (DNS query).",
+    "notes": "DNS queries - C2 communication indicator."
+  },
+  {
+    "id": "26",
+    "source": "Sysmon",
+    "category": "File",
+    "level": "Medium",
+    "description": "FileBlockExecutable.",
+    "notes": "Executable file blocking."
+  },
+  {
+    "id": "27",
+    "source": "Sysmon",
+    "category": "File",
+    "level": "Medium",
+    "description": "FileBlockShredding.",
+    "notes": "File shredding detection."
+  },
+  {
+    "id": "28",
+    "source": "Sysmon",
+    "category": "File",
+    "level": "Medium",
+    "description": "FileExecutableDetected.",
+    "notes": "Executable detected at unusual location."
+  },
+  {
+    "id": "1100",
+    "source": "System",
+    "category": "Log Management",
+    "level": "High",
+    "description": "The event logging service has shut down.",
+    "notes": "Event log service stopped."
+  },
+  {
+    "id": "1101",
+    "source": "System",
+    "category": "Log Management",
+    "level": "Critical",
+    "description": "Audit events have been dropped by the transport.",
+    "notes": "CRITICAL: Events lost - logging failure."
+  },
+  {
+    "id": "1104",
+    "source": "System",
+    "category": "Log Management",
+    "level": "Critical",
+    "description": "The security Log is now full.",
+    "notes": "CRITICAL: Event log at capacity - may stop logging."
+  },
+  {
+    "id": "1105",
+    "source": "System",
+    "category": "Log Management",
+    "level": "Info",
+    "description": "Event log automatic backup.",
+    "notes": "Log backup completed."
+  },
+  {
+    "id": "1108",
+    "source": "System",
+    "category": "Log Management",
+    "level": "High",
+    "description": "The event logging service encountered an error.",
+    "notes": "Logging service error."
+  },
+  {
+    "id": "4608",
+    "source": "System",
+    "category": "Startup",
+    "level": "Info",
+    "description": "Windows is starting up.",
+    "notes": "System boot detected."
+  },
+  {
+    "id": "4609",
+    "source": "System",
+    "category": "Shutdown",
+    "level": "Info",
+    "description": "Windows is shutting down.",
+    "notes": "System shutdown initiated."
+  },
+  {
+    "id": "4610",
+    "source": "System",
+    "category": "Security",
+    "level": "Info",
+    "description": "An authentication package has been loaded by the Local Security Authority.",
+    "notes": "Auth package loaded at startup."
+  },
+  {
+    "id": "4611",
+    "source": "System",
+    "category": "Security",
+    "level": "Info",
+    "description": "A trusted logon process has been registered with the Local Security Authority.",
+    "notes": "Logon process registration."
+  },
+  {
+    "id": "4614",
+    "source": "System",
+    "category": "Security",
+    "level": "Info",
+    "description": "A notification package has been loaded by the Security Account Manager.",
+    "notes": "SAM notification package loaded."
+  },
+  {
+    "id": "4616",
+    "source": "System",
+    "category": "System",
+    "level": "High",
+    "description": "The system time was changed.",
+    "notes": "CRITICAL: Time change detected - may indicate covering tracks or timestamp spoofing."
+  },
+  {
+    "id": "4618",
+    "source": "System",
+    "category": "Security",
+    "level": "High",
+    "description": "A monitored security event pattern has occurred.",
+    "notes": "Audit policy pattern match."
+  },
+  {
+    "id": "4739",
+    "source": "Security",
+    "category": "Policy",
+    "level": "High",
+    "description": "Domain Policy was changed.",
+    "notes": "Alert on any domain policy modification. Monitor for: password policy weakening, lockout policy changes, Kerberos policy changes. Search: event_id:4739 | table user,domain_policy_field,old_value,new_value."
+  },
+  {
+    "id": "4730",
+    "source": "Security",
+    "category": "Group Mgmt",
+    "level": "Medium",
+    "description": "A security-enabled global group was deleted.",
+    "notes": "Monitor for deletion of security groups. Correlate with 4731 (local group delete). Alert if domain admins group deleted."
+  },
+  {
+    "id": "4768",
+    "source": "Security",
+    "category": "Kerberos",
+    "level": "Info",
+    "description": "A Kerberos TGT was requested.",
+    "notes": "Monitor for Kerberos attacks. Look for: failure_code:0x6 (invalid principal), high volume from same source (Golden Ticket attack), service_name changes. Use: event_id:4768 failure_code:* | stats count by client_ip,service_name."
+  },
+  {
+    "id": "5140",
+    "source": "Security",
+    "category": "Share Access",
+    "level": "Info",
+    "description": "A network share object was accessed.",
+    "notes": "CRITICAL for lateral movement detection. Monitor source_ip, share_name, access_type. Alert on: access to C$, ADMIN$, IPC$. Correlate with logon events (4624). Query: event_id:5140 share_name:(C$ OR ADMIN$ OR IPC$) | stats count by source_ip,target_user_name."
+  },
+  {
+    "id": "5145",
+    "source": "Security",
+    "category": "Share Access",
+    "level": "Medium",
+    "description": "A network share object was checked for access.",
+    "notes": "Detailed share enumeration. Shows file paths accessed. More granular than 5140. Monitor for: reconnaissance activity (many different files from single source), access_mask analysis (0x0001=read, 0x0002=write, 0x0004=append)."
+  },
+  {
+    "id": "3",
+    "source": "Sysmon",
+    "category": "Network",
+    "level": "Info",
+    "description": "Network connection established.",
+    "notes": "VERY NOISY but essential for C2 detection. Monitor: destination_port, destination_ip, protocol. Hunt for: known malware IPs, suspicious ports (8080, 4444, 5555). Aggregate to reduce noise: event_id:3 | stats count by destination_ip | sort - count desc."
+  },
+  {
+    "id": "4970",
+    "source": "Security",
+    "category": "IPSec",
+    "level": "Info",
+    "description": "An IPsec Quick Mode negotiation failed.",
+    "notes": "IPsec policy violations. May indicate VPN/network policy enforcement issues or tampering."
+  },
+  {
+    "id": "5038",
+    "source": "Security",
+    "category": "Integrity",
+    "level": "Critical",
+    "description": "Code integrity check failed.",
+    "notes": "CRITICAL - Integrity violation detected. File hash mismatch or unsigned driver. Immediate investigation required. Query: event_id:5038 | table host,file_name,file_hash - Potential rootkit indicator."
+  },
+  {
+    "id": "4771",
+    "source": "Security",
+    "category": "Kerberos",
+    "level": "Failure",
+    "description": "Kerberos pre-authentication failed.",
+    "notes": "Key event for detecting ASREPRoasting and password spray attacks. Monitor: service_name, status_code, source_ip. Alert on: high failure count from single IP, failures for multiple accounts. Query: event_id:4771 status_code:0x18 | stats count by source_ip,account_name."
+  },
+  {
+    "id": "4769",
+    "source": "Security",
+    "category": "Kerberos",
+    "level": "Info",
+    "description": "A Kerberos service ticket was requested.",
+    "notes": "Detect resource access patterns. Look for: encrypted_ticket_part (0x0=SUCCESS), unusual service_name (check for Kerberoasting). Correlate with process creation (4688) to identify what requested the ticket."
+  },
+  {
+    "id": "4672",
+    "source": "Security",
+    "category": "Privilege Use",
+    "level": "High",
+    "description": "Special privileges assigned to new logon.",
+    "notes": "CRITICAL privilege escalation indicator. Monitor: privilege_list field. Red flags: SeDebugPrivilege, SeLoadDriverPrivilege, SeTcbPrivilege, SeImpersonatePrivilege. Query: event_id:4672 privilege_list:*SeDebug* - Often indicates local privilege escalation."
+  },
+  {
+    "id": "8",
+    "source": "Sysmon",
+    "category": "Process",
+    "level": "High",
+    "description": "CreateRemoteThread detected.",
+    "notes": "Process injection attempt (DLL injection, code injection). Immediate alert required. Monitor: target_process, source_process. Hunt for: svchost.exe, lsass.exe, winlogon.exe as targets. Query: event_id:8 target_process_name:lsass.exe | stats count by source_process_name."
+  },
+  {
+    "id": "11",
+    "source": "Sysmon",
+    "category": "File",
+    "level": "Medium",
+    "description": "File created.",
+    "notes": "Malware dropping files. Monitor: target_filename for suspicious locations (Temp, AppData, System32). Look for: .exe, .dll, .scr, .ps1 in user-writable directories. Heavy filtering needed due to noise."
+  },
+  {
+    "id": "12",
+    "source": "Sysmon",
+    "category": "Registry",
+    "level": "Medium",
+    "description": "Registry key/value created or deleted.",
+    "notes": "Persistence mechanism detection. Watch for modifications in: Run keys (HKLM/HKCU\\\\Run), Services (HKLM\\\\Services), Browser Helper Objects. Query: event_id:12 registry_key:*Run* | stats count by registry_key_path."
+  },
+  {
+    "id": "13",
+    "source": "Sysmon",
+    "category": "Registry",
+    "level": "Medium",
+    "description": "Registry value set.",
+    "notes": "Granular registry modifications. Combined with 12 for full registry monitoring. Heavy noise filtering required - focus on sensitive keys (HKLM\\\\Security, Run keys)."
+  },
+  {
+    "id": "22",
+    "source": "Sysmon",
+    "category": "DNS",
+    "level": "Medium",
+    "description": "DNS query detected.",
+    "notes": "C2 communication detection. Monitor: query (domain lookup), query_result (IP resolution). Hunt for: DGA domains, known C2 domains, uncommon TLDs. Query: event_id:22 query_result:* | stats count by query | sort - count desc."
+  }
+]
