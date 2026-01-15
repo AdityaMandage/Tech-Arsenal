@@ -9,7 +9,7 @@
       "icon": "🔍",
       "description": "A powerful interactive tool for searching and analyzing Windows Event IDs. Quickly find event codes, understand their meanings, and get security insights.",
       "path": "Tools%20and%20Scripts/WinEvent-Finder/index.html",
-      "github": "https://github.com/AdityaMandage/Security-Toolkit/tree/main/Tools%20and%20Scripts/WinEvent-Finder",
+      "github": "https://github.com/AdityaMandage/Tech-Arsenal/tree/main/Tools%20and%20Scripts/WinEvent-Finder",
       "features": [
         "Search Windows Event IDs",
         "Event descriptions & details",
@@ -23,8 +23,8 @@
       "name": "Email Header Analyzer",
       "icon": "📧",
       "description": "Parse and analyze email headers with geolocation lookups. Extract sender details, routing data, and IP addresses for forensics and security analysis.",
-      "path": "https://github.com/AdityaMandage/Security-Toolkit/tree/main/Tools%20and%20Scripts/Email%20Header%20Analyzer",
-      "github": "https://github.com/AdityaMandage/Security-Toolkit/tree/main/Tools%20and%20Scripts/Email%20Header%20Analyzer",
+      "path": "https://github.com/AdityaMandage/Tech-Arsenal/tree/main/Tools%20and%20Scripts/Email%20Header%20Analyzer",
+      "github": "https://github.com/AdityaMandage/Tech-Arsenal/tree/main/Tools%20and%20Scripts/Email%20Header%20Analyzer",
       "features": [
         "Parse email headers",
         "Extract IP addresses",
