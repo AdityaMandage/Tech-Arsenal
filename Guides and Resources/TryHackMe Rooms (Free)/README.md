@@ -14,10 +14,10 @@ Inspired by [rng70/TryHackMe-Roadmap](https://github.com/rng70/TryHackMe-Roadmap
 
 ## How to Use
 
-#### **# Visit below link and use directly [Go-to-link](https://adityamandage.github.io/Security-Toolkit/Guides%20and%20Resources/TryHackMe%20Rooms%20(Free)/)**
+#### **# Visit below link and use directly [Go-to-link](https://adityamandage.github.io/Tech-Arsenal/Guides%20and%20Resources/TryHackMe%20Rooms%20(Free)/)**
 
 ```
-https://adityamandage.github.io/Security-Toolkit/Guides%20and%20Resources/TryHackMe%20Rooms%20(Free)/
+https://adityamandage.github.io/Tech-Arsenal/Guides%20and%20Resources/TryHackMe%20Rooms%20(Free)/
 ```
 
 
