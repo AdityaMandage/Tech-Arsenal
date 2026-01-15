@@ -32,21 +32,6 @@
         "Email forensics"
       ],
       "type": "python"
-    },
-    {
-      "id": "guides-resources",
-      "name": "Guides & Resources",
-      "icon": "📚",
-      "description": "Comprehensive guides, tutorials, and resources for learning cybersecurity concepts, best practices, and advanced techniques.",
-      "path": "https://github.com/AdityaMandage/Security-Toolkit/tree/main/Guides%20and%20Resources",
-      "github": "https://github.com/AdityaMandage/Security-Toolkit/tree/main/Guides%20and%20Resources",
-      "features": [
-        "Security tutorials",
-        "Best practices",
-        "Learning guides",
-        "Reference materials"
-      ],
-      "type": "documentation"
     }
   ],
   "features": [
