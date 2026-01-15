@@ -342,19 +342,19 @@
                 <h3>GitHub Repository</h3>
                 <p>Access the source code, report issues, and contribute to the project.</p>
                 <br>
-                <a href="https://github.com/AdityaMandage/Security-Toolkit" class="btn btn-primary" style="margin-top: 10px;">Visit Repository</a>
+                <a href="https://github.com/AdityaMandage/Tech-Arsenal" class="btn btn-primary" style="margin-top: 10px;">Visit Repository</a>
             </div>
             <div class="resource-card">
                 <h3>Tools & Scripts</h3>
                 <p>Browse all available tools and scripts organized by category.</p>
                 <br>
-                <a href="https://github.com/AdityaMandage/Security-Toolkit/tree/main/Tools%20and%20Scripts" class="btn btn-primary" style="margin-top: 10px;">Explore Tools</a>
+                <a href="https://github.com/AdityaMandage/Tech-Arsenal/tree/main/Tools%20and%20Scripts" class="btn btn-primary" style="margin-top: 10px;">Explore Tools</a>
             </div>
             <div class="resource-card">
                 <h3>Documentation</h3>
                 <p>Read detailed documentation about each tool and how to use them.</p>
                 <br>
-                <a href="https://github.com/AdityaMandage/Security-Toolkit#readme" class="btn btn-primary" style="margin-top: 10px;">Read Docs</a>
+                <a href="https://github.com/AdityaMandage/Tech-Arsenal#readme" class="btn btn-primary" style="margin-top: 10px;">Read Docs</a>
             </div>
         </div>
 
@@ -376,7 +376,7 @@
                 For educational and learning purposes. Always respect privacy and terms of service when using these tools.
             </p>
             <div class="social-links">
-                <a href="https://github.com/AdityaMandage/Security-Toolkit">GitHub</a>
+                <a href="https://github.com/AdityaMandage/Tech-Arsenal">GitHub</a>
                 <a href="https://github.com/AdityaMandage">Profile</a>
             </div>
             <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.7;">
@@ -497,7 +497,7 @@
         // ===================================
         async function loadGuidesAndResources() {
             try {
-                const githubApiUrl = 'https://api.github.com/repos/AdityaMandage/Security-Toolkit/contents/Guides%20and%20Resources';
+                const githubApiUrl = 'https://api.github.com/repos/AdityaMandage/Tech-Arsenal/contents/Guides%20and%20Resources';
                 const response = await fetch(githubApiUrl);
                 
                 if (!response.ok) return;
@@ -568,7 +568,7 @@
                     let pageUrl = '';
                     if (guide.isPage) {
                         // GitHub Pages URL format
-                        pageUrl = `https://adityamandage.github.io/Security-Toolkit/Guides%20and%20Resources/${encodeURIComponent(guide.folderName)}/`;
+                        pageUrl = `https://adityamandage.github.io/Tech-Arsenal/Guides%20and%20Resources/${encodeURIComponent(guide.folderName)}/`;
                     } else if (guide.isMarkdown) {
                         // Markdown - will use modal viewer
                         pageUrl = `javascript:loadMarkdownGuide('${guide.rawUrl}', '${displayName}', '${guide.folderName}')`;
