@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Toolkit - Cybersecurity Tools & Resources</title>
+    <title id="pageTitle">Tech & IT Toolkit - Tools & Resources</title>
     <style>
         * {
             margin: 0;
@@ -315,9 +315,9 @@
     <div class="container">
         <!-- Header -->
         <header>
-            <h1>🔐 Security Toolkit</h1>
-            <p>A Comprehensive Collection of Cybersecurity Tools, Resources & Guides</p>
-            <p class="tagline">For Learning Purposes • Open Source • Community Driven</p>
+            <h1 id="siteName">🔐 Tech & IT Toolkit</h1>
+            <p id="siteDescription">A Comprehensive Collection of Technology & IT Tools, Resources & Guides</p>
+            <p class="tagline" id="siteTagline">For Learning Purposes • Open Source • Community Driven</p>
         </header>
 
         <!-- Main Tools Section -->
@@ -365,7 +365,7 @@
 
         <!-- Footer -->
         <footer>
-            <p><strong>Security Toolkit</strong> - A Repository for Cybersecurity Tools, Resources & Guides</p>
+            <p id="footerTitle"><strong>Tech & IT Toolkit</strong> - A Repository for Technology & IT Tools, Resources & Guides</p>
             <p style="font-size: 0.9rem; margin-top: 15px;">
                 Created by <a href="https://github.com/AdityaMandage" style="color: #fff; text-decoration: underline;">Aditya Mandage</a>
             </p>
@@ -399,6 +399,20 @@
                 const response = await fetch('tools-config.json');
                 if (!response.ok) throw new Error('Failed to load config');
                 toolsData = await response.json();
+                
+                // Update site branding from config
+                if (toolsData.siteName) {
+                    document.getElementById('siteName').textContent = '🔐 ' + toolsData.siteName;
+                    document.getElementById('pageTitle').textContent = toolsData.siteName + ' - Tools & Resources';
+                    document.getElementById('footerTitle').textContent = '<strong>' + toolsData.siteName + '</strong> - A Repository for Technology & IT Tools, Resources & Guides';
+                }
+                if (toolsData.siteDescription) {
+                    document.getElementById('siteDescription').textContent = toolsData.siteDescription;
+                }
+                if (toolsData.tagline) {
+                    document.getElementById('siteTagline').textContent = toolsData.tagline;
+                }
+                
                 renderTools();
                 renderFeatures();
                 renderTopics();
@@ -474,8 +488,59 @@
             topicsContainer.innerHTML = toolsData.topics.map(topic => `<span class="badge">${topic}</span>`).join('');
         }
 
+        // ===================================
+        // AUTO-DISCOVERY FOR GUIDES & RESOURCES
+        // Automatically fetches folders from GitHub without JSON config
+        // ===================================
+        async function loadGuidesAndResources() {
+            try {
+                const githubApiUrl = 'https://api.github.com/repos/AdityaMandage/Security-Toolkit/contents/Guides%20and%20Resources';
+                const response = await fetch(githubApiUrl);
+                
+                if (!response.ok) return;
+                
+                const items = await response.json();
+                const folders = items.filter(item => item.type === 'dir').sort((a, b) => a.name.localeCompare(b.name));
+                
+                if (folders.length > 0) {
+                    // Add a resources section for discovered folders
+                    const guidesContainer = document.createElement('div');
+                    guidesContainer.id = 'auto-guides';
+                    
+                    const resourcesSection = document.querySelector('.resources-grid');
+                    if (resourcesSection) {
+                        const html = folders.map(folder => `
+                            <div class="resource-card">
+                                <h3>📁 ${folder.name}</h3>
+                                <p>Access guides and resources</p>
+                                <br>
+                                <a href="${folder.html_url}" class="btn btn-primary" style="margin-top: 10px;" target="_blank">Explore</a>
+                            </div>
+                        `).join('');
+                        
+                        // Insert after the Quick Links section
+                        const quickLinksSection = document.querySelector('.resources-grid');
+                        if (quickLinksSection && quickLinksSection.nextElementSibling) {
+                            const newSection = document.createElement('div');
+                            newSection.innerHTML = `
+                                <h2 class="section-title">📚 Guides & Resources</h2>
+                                <div class="resources-grid">${html}</div>
+                            `;
+                            quickLinksSection.parentNode.insertBefore(newSection, document.querySelector('.section-title').nextElementSibling.nextElementSibling.nextElementSibling);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.warn('Could not auto-load guides and resources:', error);
+                // Silently fail - guides not critical
+            }
+        }
+
         // Load on page load
-        document.addEventListener('DOMContentLoaded', loadToolsConfig);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadToolsConfig();
+            loadGuidesAndResources();
+        });
     </script>
 </body>
 </html>
