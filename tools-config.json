@@ -1,0 +1,89 @@
+{
+  "tools": [
+    {
+      "id": "winevent-finder",
+      "name": "WinEvent-Finder",
+      "icon": "🔍",
+      "description": "A powerful interactive tool for searching and analyzing Windows Event IDs. Quickly find event codes, understand their meanings, and get security insights.",
+      "path": "Tools%20and%20Scripts/WinEvent-Finder/index.html",
+      "github": "https://github.com/AdityaMandage/Security-Toolkit/tree/main/Tools%20and%20Scripts/WinEvent-Finder",
+      "features": [
+        "Search Windows Event IDs",
+        "Event descriptions & details",
+        "Fast lookup functionality",
+        "Security insights"
+      ],
+      "type": "web"
+    },
+    {
+      "id": "email-header-analyzer",
+      "name": "Email Header Analyzer",
+      "icon": "📧",
+      "description": "Parse and analyze email headers with geolocation lookups. Extract sender details, routing data, and IP addresses for forensics and security analysis.",
+      "path": "https://github.com/AdityaMandage/Security-Toolkit/tree/main/Tools%20and%20Scripts/Email%20Header%20Analyzer",
+      "github": "https://github.com/AdityaMandage/Security-Toolkit/tree/main/Tools%20and%20Scripts/Email%20Header%20Analyzer",
+      "features": [
+        "Parse email headers",
+        "Extract IP addresses",
+        "Geolocation lookups",
+        "Email forensics"
+      ],
+      "type": "python"
+    },
+    {
+      "id": "guides-resources",
+      "name": "Guides & Resources",
+      "icon": "📚",
+      "description": "Comprehensive guides, tutorials, and resources for learning cybersecurity concepts, best practices, and advanced techniques.",
+      "path": "https://github.com/AdityaMandage/Security-Toolkit/tree/main/Guides%20and%20Resources",
+      "github": "https://github.com/AdityaMandage/Security-Toolkit/tree/main/Guides%20and%20Resources",
+      "features": [
+        "Security tutorials",
+        "Best practices",
+        "Learning guides",
+        "Reference materials"
+      ],
+      "type": "documentation"
+    }
+  ],
+  "features": [
+    {
+      "icon": "🎯",
+      "title": "Specialized Tools",
+      "description": "Purpose-built security tools designed for specific tasks like Windows event analysis and email forensics."
+    },
+    {
+      "icon": "📖",
+      "title": "Learning Resources",
+      "description": "Educational guides and tutorials covering cybersecurity fundamentals and advanced topics."
+    },
+    {
+      "icon": "🔓",
+      "title": "Open Source",
+      "description": "Fully open-source project available on GitHub. Contribute and improve the toolkit!"
+    },
+    {
+      "icon": "🛡️",
+      "title": "Security Focused",
+      "description": "Tools and resources designed with security analysis, OSINT, and incident response in mind."
+    },
+    {
+      "icon": "📱",
+      "title": "User Friendly",
+      "description": "Intuitive interfaces and easy-to-use tools accessible through web browsers."
+    },
+    {
+      "icon": "🚀",
+      "title": "Active Development",
+      "description": "Regularly updated with new tools, features, and improvements based on community feedback."
+    }
+  ],
+  "topics": [
+    "Cybersecurity",
+    "Security Tools",
+    "OSINT",
+    "Incident Response",
+    "Email Forensics",
+    "Windows Security"
+  ]
+}
