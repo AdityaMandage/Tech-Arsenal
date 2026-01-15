@@ -1,4 +1,7 @@
 {
+  "siteName": "Tech & IT Toolkit",
+  "siteDescription": "A Comprehensive Collection of Technology & IT Tools, Resources & Guides",
+  "tagline": "For Learning Purposes • Open Source • Community Driven",
   "tools": [
     {
       "id": "winevent-finder",
