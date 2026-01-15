@@ -326,6 +326,9 @@
             <div class="loading">Loading tools...</div>
         </div>
 
+        <!-- Guides & Resources Section (Auto-discovered) -->
+        <div id="guidesSection"></div>
+
         <!-- Key Features Section -->
         <h2 class="section-title">✨ Key Features</h2>
         <div class="resources-grid" id="featuresGrid">
@@ -514,27 +517,38 @@
                         
                         const folderContents = await folderResponse.json();
                         
-                        // Filter for markdown and HTML files
-                        const files = folderContents.filter(file => 
-                            file.type === 'file' && (
-                                file.name.endsWith('.md') || 
-                                file.name.endsWith('.html') ||
-                                file.name.endsWith('.MD') ||
-                                file.name.endsWith('.HTML')
-                            )
+                        // Check if folder has index.html
+                        const hasIndexHtml = folderContents.some(file => 
+                            file.type === 'file' && file.name.toLowerCase() === 'index.html'
                         );
                         
-                        files.forEach(file => {
+                        if (hasIndexHtml) {
+                            // If index.html exists, create ONE card for the folder (page)
                             allGuides.push({
                                 folderName: folder.name,
-                                fileName: file.name,
-                                downloadUrl: file.download_url,
-                                htmlUrl: file.html_url,
-                                rawUrl: file.download_url,
-                                isMarkdown: file.name.toLowerCase().endsWith('.md'),
-                                isHtml: file.name.toLowerCase().endsWith('.html')
+                                fileName: 'index.html',
+                                isPage: true,
+                                isMarkdown: false,
+                                isHtml: true
                             });
-                        });
+                        } else {
+                            // Otherwise, list individual markdown files
+                            const files = folderContents.filter(file => 
+                                file.type === 'file' && file.name.toLowerCase().endsWith('.md')
+                            );
+                            
+                            files.forEach(file => {
+                                allGuides.push({
+                                    folderName: folder.name,
+                                    fileName: file.name,
+                                    downloadUrl: file.download_url,
+                                    rawUrl: file.download_url,
+                                    isPage: false,
+                                    isMarkdown: true,
+                                    isHtml: false
+                                });
+                            });
+                        }
                     } catch (e) {
                         console.warn(`Could not fetch contents of ${folder.name}:`, e);
                     }
@@ -544,34 +558,54 @@
                 
                 // Create guides section
                 const guidesHtml = allGuides.map(guide => {
-                    let displayName = guide.fileName.replace(/\.md|\.MD|\.html|\.HTML/i, '').replace(/[-_]/g, ' ');
-                    let icon = guide.isMarkdown ? '📄' : '🌐';
-                    let buttonText = guide.isMarkdown ? 'Read Guide' : 'Open Page';
-                    let linkUrl = guide.isMarkdown 
-                        ? `javascript:loadMarkdownGuide('${guide.rawUrl}', '${displayName}', '${guide.folderName}')`
-                        : guide.rawUrl;
+                    let displayName = guide.isPage 
+                        ? guide.folderName 
+                        : guide.fileName.replace(/\.(md|html)$/i, '').replace(/[-_]/g, ' ');
+                    let icon = guide.isPage ? '🌐' : '📄';
+                    let buttonText = guide.isPage ? 'Open Page' : 'Read Guide';
                     
-                    return `
-                        <div class="resource-card">
-                            <h3>${icon} ${displayName}</h3>
-                            <p style="font-size: 0.8rem; color: #999;">in ${guide.folderName}</p>
-                            <br>
-                            <a href="${linkUrl}" ${!guide.isMarkdown ? 'target="_blank"' : ''} class="btn btn-primary" style="margin-top: 10px;">
-                                ${buttonText}
-                            </a>
-                        </div>
-                    `;
+                    // Construct proper GitHub Pages URL for HTML pages
+                    let pageUrl = '';
+                    if (guide.isPage) {
+                        // GitHub Pages URL format
+                        pageUrl = `https://aditymandage.github.io/Security-Toolkit/Guides%20and%20Resources/${encodeURIComponent(guide.folderName)}/`;
+                    } else if (guide.isMarkdown) {
+                        // Markdown - will use modal viewer
+                        pageUrl = `javascript:loadMarkdownGuide('${guide.rawUrl}', '${displayName}', '${guide.folderName}')`;
+                    }
+                    
+                    if (guide.isPage) {
+                        return `
+                            <div class="resource-card">
+                                <h3>${icon} ${displayName}</h3>
+                                <p style="font-size: 0.8rem; color: #999;">Interactive Guide</p>
+                                <br>
+                                <a href="${pageUrl}" target="_blank" class="btn btn-primary" style="margin-top: 10px;">
+                                    ${buttonText}
+                                </a>
+                            </div>
+                        `;
+                    } else {
+                        return `
+                            <div class="resource-card">
+                                <h3>${icon} ${displayName}</h3>
+                                <p style="font-size: 0.8rem; color: #999;">in ${guide.folderName}</p>
+                                <br>
+                                <button class="btn btn-primary" style="margin-top: 10px;" onclick="loadMarkdownGuide('${guide.rawUrl}', '${displayName}', '${guide.folderName}')">
+                                    ${buttonText}
+                                </button>
+                            </div>
+                        `;
+                    }
                 }).join('');
                 
-                // Insert after the Quick Links section
-                const topicsDiv = document.querySelector('[style*="text-align: center; margin: 60px"]');
-                if (topicsDiv) {
-                    const newSection = document.createElement('div');
-                    newSection.innerHTML = `
+                // Insert into the guides section (right after tools)
+                const guidesSection = document.getElementById('guidesSection');
+                if (guidesSection) {
+                    guidesSection.innerHTML = `
                         <h2 class="section-title">📚 Guides & Resources</h2>
                         <div class="resources-grid">${guidesHtml}</div>
                     `;
-                    topicsDiv.parentNode.insertBefore(newSection, topicsDiv);
                 }
             } catch (error) {
                 console.warn('Could not auto-load guides and resources:', error);
