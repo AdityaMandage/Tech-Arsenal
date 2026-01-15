@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WinEvent Finder | The Ultimate Event ID Search</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.1.0/dist/fuse.basic.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">WIN<span class="highlight">EVENT</span> FINDER</div>
+            <p class="subtitle">The definitive offline reference for Windows Security Logs.</p>
+        </header>
+
+        <div class="search-box-wrapper">
+            <input type="text" id="searchInput" placeholder="Search ID (e.g., 4624) or Keyword (e.g., 'RDP', 'Malware')..." autocomplete="off">
+            <div class="search-icon">🔍</div>
+        </div>
+
+        <div id="resultsInfo" class="results-info"></div>
+        <div id="resultsContainer" class="results-grid"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
