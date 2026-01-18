@@ -1,0 +1,69 @@
+{
+  "generated_at": "2026-01-18T19:48:07.214103",
+  "sections": {
+    "Tools and Scripts": [
+      {
+        "id": "Email Header Analyzer",
+        "name": "Email Header Analyzer",
+        "description": "Analyze email headers to identify path, delays, and potential spoofing.",
+        "category": "Email Security",
+        "type": "script",
+        "path": "Tools and Scripts/Email Header Analyzer",
+        "source_path": "Tools and Scripts/Email Header Analyzer",
+        "icon": "\ud83d\udce7",
+        "tags": [
+          "email",
+          "forensics",
+          "python"
+        ]
+      },
+      {
+        "id": "WinEvent-Finder",
+        "name": "WinEvent Finder",
+        "description": "Interactive search tool for Windows Event IDs. Quickly lookup security events and generated alerts.",
+        "category": "Blue Team Tools",
+        "type": "web",
+        "path": "Tools and Scripts/WinEvent-Finder/index.html",
+        "source_path": "Tools and Scripts/WinEvent-Finder",
+        "icon": "\ud83d\udd0d",
+        "tags": [
+          "windows",
+          "security",
+          "logging"
+        ]
+      }
+    ],
+    "Guides and Resources": [
+      {
+        "id": "TryHackMe Rooms (Free)",
+        "name": "TryHackMe Rooms",
+        "description": "Curated list of free TryHackMe rooms for learning cybersecurity.",
+        "category": "Training",
+        "type": "resource",
+        "path": "Guides and Resources/TryHackMe Rooms (Free)",
+        "source_path": "Guides and Resources/TryHackMe Rooms (Free)",
+        "icon": "\ud83c\udf93",
+        "tags": [
+          "learning",
+          "ctf",
+          "free"
+        ]
+      },
+      {
+        "id": "Wireshark",
+        "name": "Wireshark Guide",
+        "description": "Essential filters and usage guides for Wireshark network analysis.",
+        "category": "Network Analysis",
+        "type": "resource",
+        "path": "Guides and Resources/Wireshark",
+        "source_path": "Guides and Resources/Wireshark",
+        "icon": "\ud83e\udd88",
+        "tags": [
+          "network",
+          "pcap",
+          "analysis"
+        ]
+      }
+    ]
+  }
+}

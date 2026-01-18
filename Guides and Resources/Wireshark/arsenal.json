@@ -1,0 +1,12 @@
+{
+    "name": "Wireshark Guide",
+    "description": "Essential filters and usage guides for Wireshark network analysis.",
+    "category": "Network Analysis",
+    "type": "resource",
+    "icon": "🦈",
+    "tags": [
+        "network",
+        "pcap",
+        "analysis"
+    ]
+}

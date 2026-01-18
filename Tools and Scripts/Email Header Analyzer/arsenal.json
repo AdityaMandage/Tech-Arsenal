@@ -1,0 +1,12 @@
+{
+    "name": "Email Header Analyzer",
+    "description": "Analyze email headers to identify path, delays, and potential spoofing.",
+    "category": "Email Security",
+    "type": "script",
+    "icon": "📧",
+    "tags": [
+        "email",
+        "forensics",
+        "python"
+    ]
+}

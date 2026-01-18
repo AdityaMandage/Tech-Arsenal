@@ -334,10 +334,6 @@
         }
 
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
             .nav-content {
                 padding: 0 20px;
             }
@@ -373,24 +369,6 @@
     </main>
 
     <script>
-        // CONFIG
-        const CONFIG = {
-            repo: 'Tech-Arsenal',
-            user: 'AdityaMandage',
-            // Define the sections you want to load. 
-            // Key = Folder Name (URL encoded), Value = Human Readable fallbacks (optional)
-            sections: [
-                'Tools%20and%20Scripts',
-                'Guides%20and%20Resources'
-            ]
-        };
-
-        // ICONS
-        const ICONS = {
-            security: '🛡️', network: '📡', email: '📧',
-            web: '🌐', forensic: '🔍', document: '📚', default: '⚡'
-        };
-
         // INIT
         document.addEventListener('DOMContentLoaded', () => {
             initApp();
@@ -400,12 +378,38 @@
             const container = document.getElementById('mainContent');
 
             try {
+                // Fetch Static Inventory (Zero-API approach)
+                const res = await fetch('inventory.json');
+                if (!res.ok) throw new Error("Could not load inventory.json");
+
+                const data = await res.json();
+
                 // Clear loading state
                 container.innerHTML = '';
 
-                // Process each section dynamically
-                for (const path of CONFIG.sections) {
-                    await renderCategorySection(container, path);
+                // Update Timestamp
+                if (data.generated_at) {
+                    const date = new Date(data.generated_at).toLocaleDateString();
+                    console.log(`Inventory generated at: ${date}`);
+                }
+
+                // Render Sections
+                const sections = data.sections || {};
+
+                // Defined order for display
+                const sectionOrder = ["Tools and Scripts", "Guides and Resources"];
+
+                // Render known sections first
+                for (const name of sectionOrder) {
+                    if (sections[name]) {
+                        renderSection(container, name, sections[name]);
+                        delete sections[name]; // Remove to avoid duplicate
+                    }
+                }
+
+                // Render any remaining custom sections
+                for (const [name, items] of Object.entries(sections)) {
+                    renderSection(container, name, items);
                 }
 
             } catch (e) {
@@ -413,137 +417,75 @@
             }
         }
 
-        async function renderCategorySection(container, path) {
-            // 1. Fetch Items
-            const items = await safeFetchContents(path);
-            if (!items || items.length === 0) return; // Skip empty sections
+        function renderSection(container, name, items) {
+            if (!items || items.length === 0) return;
 
-            // Filter for directories (modules)
-            const folders = items.filter(i => i.type === 'dir');
-            if (folders.length === 0) return;
-
-            // 2. Create Section Header (Derived from Folder Name)
-            // Decode URL (e.g. Tools%20and%20Scripts -> Tools and Scripts)
-            const sectionName = decodeURIComponent(path).replace(/-/g, ' ');
+            // Format Title
+            // e.g. "Tools and Scripts" -> Keep as is
 
             const sectionHtml = `
                 <div class="section-header">
                     <div>
-                        <h2 class="section-title">${sectionName}</h2>
-                        <div class="section-subtitle">${folders.length} Items Found</div>
+                        <h2 class="section-title">${name}</h2>
+                        <div class="section-subtitle">${items.length} Modules Loaded</div>
                     </div>
                 </div>
-                <div class="grid" id="grid-${path}">
-                    <!-- Cards go here -->
+                <div class="grid">
+                    ${items.map(item => createCard(item)).join('')}
                 </div>
             `;
 
-            // Append Section Wrapper
-            const sectionWrapper = document.createElement('div');
-            sectionWrapper.innerHTML = sectionHtml;
-            container.appendChild(sectionWrapper);
-
-            // 3. Render Cards in Parallel
-            const grid = document.getElementById(`grid-${path}`);
-
-            const cardPromises = folders.map(async folder => {
-                // Fetch folder contents to check for index.html (Web Artifact)
-                const contents = await safeFetchContents(`${path}/${folder.name}`);
-
-                // Heuristics
-                const hasIndex = contents && contents.some(f => f.name.toLowerCase() === 'index.html');
-                const isWeb = hasIndex;
-
-                // Determine Labels & Badges
-                let typeLabel = 'Resource';
-                let badgeClass = 'badge-script'; // reuse script style for generic
-
-                if (isWeb) {
-                    typeLabel = 'Web App';
-                    badgeClass = 'badge-web';
-                } else if (path.includes('Tools')) {
-                    typeLabel = 'Script/Tool';
-                }
-
-                // Determine Icon
-                let icon = ICONS.default;
-                const nameLower = folder.name.toLowerCase();
-
-                if (path.includes('Guides')) icon = ICONS.document;
-                else {
-                    if (nameLower.includes('email')) icon = ICONS.email;
-                    else if (nameLower.includes('event')) icon = ICONS.forensic;
-                    else if (nameLower.includes('net')) icon = ICONS.network;
-                    else if (isWeb) icon = ICONS.web;
-                }
-
-                // Action URL
-                const launchUrl = isWeb
-                    ? `${path}/${folder.name}/index.html`
-                    : folder.html_url;
-
-                const primaryBtnText = isWeb ? 'Launch' : (path.includes('Guides') ? 'View Files' : 'View Code');
-                const primaryBtnClass = isWeb ? 'btn-primary' : (path.includes('Guides') ? 'btn-outline' : 'btn-primary');
-                const targetAttr = isWeb ? '' : 'target="_blank"'; // Open web apps in same tab? Or new? Let's use same for seamless feel, or new for safety. User didn't specify. Standard is new tab for external. But this is internal. Let's use new tab for now to be safe.
-
-                return `
-                    <div class="card">
-                        <span class="card-badge ${badgeClass}">${typeLabel}</span>
-                        <div class="card-icon">${icon}</div>
-                        <h3>${folder.name.replace(/-/g, ' ')}</h3>
-                        <div class="card-footer">
-                            <a href="${launchUrl}" class="btn ${primaryBtnClass}" ${isWeb ? '' : 'target="_blank"'}>${primaryBtnText}</a>
-                            ${isWeb ? `<a href="${folder.html_url}" class="btn btn-outline" target="_blank">Source</a>` : ''}
-                        </div>
-                    </div>
-                `;
-            });
-
-            const cards = await Promise.all(cardPromises);
-            grid.innerHTML = cards.join('');
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = sectionHtml;
+            container.appendChild(wrapper);
         }
 
-        // ==========================================
-        // UTILS
-        // ==========================================
+        function createCard(item) {
+            const badgeClass = item.type === 'web' ? 'badge-web' : 'badge-script';
+            const typeLabel = item.type === 'web' ? 'Web App' :
+                (item.type === 'script' ? 'Script' : 'Resource');
 
-        async function safeFetchContents(path) {
-            const CACHE_KEY = `techarsenal_${path}`;
-            const cached = localStorage.getItem(CACHE_KEY);
+            // "Launch" vs "View" logic
+            const primaryBtnText = item.type === 'web' ? 'Launch' : 'View Code';
+            const primaryBtnClass = item.type === 'web' ? 'btn-primary' : 'btn-outline';
+            const targetAttr = item.type === 'web' ? '' : 'target="_blank"';
 
-            // Cache hit (1 hour)
-            if (cached) {
-                const { ts, data } = JSON.parse(cached);
-                if (Date.now() - ts < 3600000) return data;
-            }
+            // Source Link logic
+            // If item has source_path, show Source button
+            const sourceLink = item.type === 'web'
+                ? `<a href="${item.source_path}" class="btn btn-outline" target="_blank">Source</a>`
+                : '';
 
-            const url = `https://api.github.com/repos/${CONFIG.user}/${CONFIG.repo}/contents/${path}`;
+            // Category Badge
+            const categoryBadge = item.category && item.category !== 'Tools and Scripts' && item.category !== 'Guides and Resources'
+                ? `<div style="font-size:0.75rem; color:var(--accent); margin-bottom:8px; font-weight:600;">${item.category}</div>`
+                : '';
 
-            try {
-                const res = await fetch(url);
-                if (!res.ok) throw new Error(`API Error: ${res.status}`);
-                const data = await res.json();
-
-                localStorage.setItem(CACHE_KEY, JSON.stringify({
-                    ts: Date.now(),
-                    data
-                }));
-
-                return data;
-            } catch (e) {
-                console.error("Fetch failed:", e);
-                return null;
-            }
+            return `
+                <div class="card">
+                    <span class="card-badge ${badgeClass}">${typeLabel}</span>
+                    <div class="card-icon">${item.icon || '⚡'}</div>
+                    
+                    ${categoryBadge}
+                    
+                    <h3>${item.name}</h3>
+                    <p>${item.description}</p>
+                    
+                    <div class="card-footer">
+                        <a href="${item.path}" class="btn ${primaryBtnClass}" ${targetAttr}>${primaryBtnText}</a>
+                        ${sourceLink}
+                    </div>
+                </div>
+            `;
         }
 
         function renderError(container, msg) {
             container.innerHTML = `
                 <div class="error-state">
-                    <h3>Connection Failed</h3>
-                    <p>${msg}</p>
+                    <h3>Inventory Not Found</h3>
+                    <p>Could not load <code>inventory.json</code>.</p>
                     <p style="font-size:0.8rem; margin-top:10px; opacity:0.7">
-                        If you are opening this file locally (file://), GitHub API may be blocked by CORS.<br>
-                        Please use a local server (VS Code Live Server) or deploy to GitHub Pages.
+                        Please run <code>python update_inventory.py</code> to generate the index.
                     </p>
                 </div>
             `;
@@ -552,4 +494,3 @@
 </body>
 
 </html>
-```

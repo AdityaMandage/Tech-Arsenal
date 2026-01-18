@@ -1,0 +1,12 @@
+{
+    "name": "TryHackMe Rooms",
+    "description": "Curated list of free TryHackMe rooms for learning cybersecurity.",
+    "category": "Training",
+    "type": "resource",
+    "icon": "🎓",
+    "tags": [
+        "learning",
+        "ctf",
+        "free"
+    ]
+}

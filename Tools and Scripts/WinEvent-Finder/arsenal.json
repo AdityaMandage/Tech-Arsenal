@@ -1,0 +1,12 @@
+{
+    "name": "WinEvent Finder",
+    "description": "Interactive search tool for Windows Event IDs. Quickly lookup security events and generated alerts.",
+    "category": "Blue Team Tools",
+    "type": "web",
+    "icon": "🔍",
+    "tags": [
+        "windows",
+        "security",
+        "logging"
+    ]
+}
