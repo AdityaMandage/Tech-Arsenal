@@ -1,10 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Tech & IT Toolkit - Tools & Resources</title>
+    <title id="pageTitle">Tech Arsenal - Security & IT Toolkit</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <style>
+        :root {
+            /* Theme: Midnight Blue & Electric Indigo */
+            --bg-body: #020617;
+            /* Slate 950 */
+            --bg-nav: rgba(2, 6, 23, 0.85);
+            /* Slate 950 transparent */
+            --bg-card: #0f172a;
+            /* Slate 900 (Darker for contrast against grid) */
+            --bg-card-hover: #1e293b;
+            /* Slate 800 */
+
+            --text-main: #f8fafc;
+            /* Slate 50 */
+            --text-muted: #94a3b8;
+            /* Slate 400 */
+
+            --accent: #6366f1;
+            /* Indigo 500 */
+            --accent-hover: #4f46e5;
+            /* Indigo 600 */
+            --accent-glow: rgba(99, 102, 241, 0.15);
+
+            --border: #1e293b;
+            /* Slate 800 */
+            --border-light: #334155;
+
+            --max-width: 1600px;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,727 +49,507 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            /* Premium Grid Background */
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            color: var(--text-main);
             min-height: 100vh;
-            padding: 20px;
+            overflow-x: hidden;
+            padding-top: 80px;
+            /* Fix overlapped content */
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        /* Subtle Vignette */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, var(--bg-body) 100%);
+            pointer-events: none;
+            z-index: -1;
         }
 
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 60px;
-            animation: slideDown 0.6s ease-out;
-        }
-
-        header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        header p {
-            font-size: 1.3rem;
-            opacity: 0.95;
-            font-weight: 300;
-        }
-
-        .tagline {
-            font-size: 1rem;
-            margin-top: 15px;
-            opacity: 0.9;
-            font-style: italic;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin-bottom: 60px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            min-height: 100px;
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: var(--bg-nav);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            width: 100%;
+            max-width: var(--max-width);
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
 
-        .card-header h2 {
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-
-        .card-icon {
-            font-size: 2.5rem;
-            margin-right: 15px;
-        }
-
-        .card-content {
-            padding: 25px;
-        }
-
-        .card-description {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-        }
-
-        .card-features {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-
-        .card-features h4 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .card-features ul {
-            list-style: none;
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .card-features li {
-            padding: 5px 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .card-features li:before {
-            content: "✓";
-            color: #667eea;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .card-footer {
-            display: flex;
-            gap: 10px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        /* Stylized Logo */
+        .brand {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-main);
             text-decoration: none;
-            display: inline-block;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.03em;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .brand-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent) 0%, #a855f7 100%);
             color: white;
+            border-radius: 8px;
+            margin-right: 12px;
+            font-size: 1.1rem;
+            box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        .btn-primary:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        .brand-text {
+            background: linear-gradient(to right, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
-            border: 2px solid #667eea;
+        .nav-links {
+            display: flex;
+            gap: 30px;
         }
 
-        .btn-secondary:hover {
-            background: #667eea;
-            color: white;
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--text-main);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 40px;
+            /* Added spacing to separate from header visually */
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
         }
 
         .section-title {
-            font-size: 2rem;
-            color: white;
-            margin-top: 40px;
-            margin-bottom: 30px;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            font-weight: 700;
         }
 
-        .resources-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 60px;
-        }
-
-        .resource-card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .resource-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .resource-card h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .resource-card p {
-            color: #666;
+        .section-subtitle {
             font-size: 0.9rem;
-            line-height: 1.5;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        footer {
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
-            padding: 30px;
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: var(--bg-card-hover);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Glass glow effect on hover */
+        .card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-web {
+            background: rgba(16, 185, 129, 0.1);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.2);
+        }
+
+        .badge-script {
+            background: rgba(245, 158, 11, 0.1);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 10px;
-            text-align: center;
-            margin-top: 60px;
         }
 
-        footer p {
+        .card h3 {
+            font-size: 1.25rem;
             margin-bottom: 10px;
+            font-weight: 600;
         }
 
-        .social-links {
-            margin-top: 20px;
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            flex-grow: 1;
         }
 
-        .social-links a {
-            color: white;
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
             text-decoration: none;
-            margin: 0 15px;
-            display: inline-block;
-            transition: opacity 0.3s ease;
-        }
-
-        .social-links a:hover {
-            opacity: 0.8;
-        }
-
-        .badge {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-
-        .loading {
+            transition: all 0.2s;
             text-align: center;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--accent);
             color: white;
-            padding: 40px;
-            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
 
-        .error {
-            background: rgba(255, 0, 0, 0.2);
-            color: #ff6b6b;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 4px solid #ff6b6b;
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5);
+            transform: translateY(-1px);
         }
 
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-muted);
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+        .btn-outline:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Statuses */
+        .loading-state,
+        .error-state {
+            padding: 80px;
+            text-align: center;
+            grid-column: 1 / -1;
+            background: rgba(15, 23, 42, 0.3);
+            border-radius: 16px;
+            border: 1px dashed var(--border-light);
+            backdrop-filter: blur(4px);
+        }
+
+        .error-state {
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
         }
 
         @media (max-width: 768px) {
-            header h1 {
+            .hero h1 {
                 font-size: 2.5rem;
             }
 
-            .grid {
-                grid-template-columns: 1fr;
+            .nav-content {
+                padding: 0 20px;
             }
 
-            .section-title {
-                font-size: 1.5rem;
+            .container {
+                padding: 20px;
             }
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <h1 id="siteName">🔐 Tech & IT Toolkit</h1>
-            <p id="siteDescription">A Comprehensive Collection of Technology & IT Tools, Resources & Guides</p>
-            <p class="tagline" id="siteTagline">For Learning Purposes • Open Source • Community Driven</p>
-        </header>
 
-        <!-- Main Tools Section -->
-        <h2 class="section-title">🛠️ Available Tools</h2>
-        <div class="grid" id="toolsGrid">
-            <div class="loading">Loading tools...</div>
-        </div>
-
-        <!-- Guides & Resources Section (Auto-discovered) -->
-        <div id="guidesSection"></div>
-
-        <!-- Key Features Section -->
-        <h2 class="section-title">✨ Key Features</h2>
-        <div class="resources-grid" id="featuresGrid">
-            <div class="loading">Loading features...</div>
-        </div>
-
-        <!-- Quick Links -->
-        <h2 class="section-title">🔗 Quick Links</h2>
-        <div class="resources-grid">
-            <div class="resource-card">
-                <h3>GitHub Repository</h3>
-                <p>Access the source code, report issues, and contribute to the project.</p>
-                <br>
-                <a href="https://github.com/AdityaMandage/Tech-Arsenal" class="btn btn-primary" style="margin-top: 10px;">Visit Repository</a>
-            </div>
-            <div class="resource-card">
-                <h3>Tools & Scripts</h3>
-                <p>Browse all available tools and scripts organized by category.</p>
-                <br>
-                <a href="https://github.com/AdityaMandage/Tech-Arsenal/tree/main/Tools%20and%20Scripts" class="btn btn-primary" style="margin-top: 10px;">Explore Tools</a>
-            </div>
-            <div class="resource-card">
-                <h3>Documentation</h3>
-                <p>Read detailed documentation about each tool and how to use them.</p>
-                <br>
-                <a href="https://github.com/AdityaMandage/Tech-Arsenal#readme" class="btn btn-primary" style="margin-top: 10px;">Read Docs</a>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="#" class="brand">
+                <div class="brand-icon">⚡</div>
+                <div class="brand-text">TechArsenal</div>
+            </a>
+            <div class="nav-links">
+                <a href="#" class="nav-link active">Dashboard</a>
+                <a href="https://github.com/AdityaMandage/Tech-Arsenal" target="_blank" class="nav-link">GitHub</a>
             </div>
         </div>
+    </nav>
 
-        <!-- Topics/Categories -->
-        <div style="text-align: center; margin: 60px 0; color: white;">
-            <h3 style="margin-bottom: 20px; font-size: 1.3rem;">Topics</h3>
-            <div id="topicsContainer" style="display: flex; justify-content: center; flex-wrap: wrap;">
-                <!-- Dynamically populated -->
-            </div>
+    <!-- Content -->
+    <main class="container" id="mainContent">
+        <div class="loading-state">
+            Loading Tech Arsenal...
         </div>
-
-        <!-- Footer -->
-        <footer>
-            <p id="footerTitle"><strong>Tech & IT Toolkit</strong> - A Repository for Technology & IT Tools, Resources & Guides</p>
-            <p style="font-size: 0.9rem; margin-top: 15px;">
-                Created by <a href="https://github.com/AdityaMandage" style="color: #fff; text-decoration: underline;">Aditya Mandage</a>
-            </p>
-            <p style="font-size: 0.85rem; margin-top: 10px; opacity: 0.8;">
-                For educational and learning purposes. Always respect privacy and terms of service when using these tools.
-            </p>
-            <div class="social-links">
-                <a href="https://github.com/AdityaMandage/Tech-Arsenal">GitHub</a>
-                <a href="https://github.com/AdityaMandage">Profile</a>
-            </div>
-            <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.7;">
-                © 2024-2026 Security Toolkit. All rights reserved.
-            </p>
-        </footer>
-    </div>
+    </main>
 
     <script>
-        // ===================================
-        // DYNAMIC CONTENT LOADER
-        // This script automatically loads tools from tools-config.json
-        // To add a new tool:
-        // 1. Edit tools-config.json
-        // 2. Add a new entry to the "tools" array
-        // 3. Refresh the page - it will automatically appear!
-        // ===================================
+        // CONFIG
+        const CONFIG = {
+            repo: 'Tech-Arsenal',
+            user: 'AdityaMandage',
+            // Define the sections you want to load. 
+            // Key = Folder Name (URL encoded), Value = Human Readable fallbacks (optional)
+            sections: [
+                'Tools%20and%20Scripts',
+                'Guides%20and%20Resources'
+            ]
+        };
 
-        let toolsData = null;
+        // ICONS
+        const ICONS = {
+            security: '🛡️', network: '📡', email: '📧',
+            web: '🌐', forensic: '🔍', document: '📚', default: '⚡'
+        };
 
-        async function loadToolsConfig() {
+        // INIT
+        document.addEventListener('DOMContentLoaded', () => {
+            initApp();
+        });
+
+        async function initApp() {
+            const container = document.getElementById('mainContent');
+
             try {
-                const response = await fetch('tools-config.json');
-                if (!response.ok) throw new Error('Failed to load config');
-                toolsData = await response.json();
-                
-                // Update site branding from config
-                if (toolsData.siteName) {
-                    document.getElementById('siteName').textContent = '🔐 ' + toolsData.siteName;
-                    document.getElementById('pageTitle').textContent = toolsData.siteName + ' - Tools & Resources';
-                    document.getElementById('footerTitle').textContent = '<strong>' + toolsData.siteName + '</strong> - A Repository for Technology & IT Tools, Resources & Guides';
+                // Clear loading state
+                container.innerHTML = '';
+
+                // Process each section dynamically
+                for (const path of CONFIG.sections) {
+                    await renderCategorySection(container, path);
                 }
-                if (toolsData.siteDescription) {
-                    document.getElementById('siteDescription').textContent = toolsData.siteDescription;
-                }
-                if (toolsData.tagline) {
-                    document.getElementById('siteTagline').textContent = toolsData.tagline;
-                }
-                
-                renderTools();
-                renderFeatures();
-                renderTopics();
-            } catch (error) {
-                console.error('Error loading tools config:', error);
-                document.getElementById('toolsGrid').innerHTML = `
-                    <div class="error">
-                        <strong>Error:</strong> Unable to load tools configuration. 
-                        Please check that tools-config.json exists in the root directory.
-                    </div>
-                `;
+
+            } catch (e) {
+                renderError(container, e.message);
             }
         }
 
-        function createToolCard(tool) {
-            const isWebTool = tool.type === 'web';
-            const buttonText = isWebTool ? 'Launch Tool →' : 'View Tool →';
-            
-            return `
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-icon">${tool.icon}</span>
-                        <h2>${tool.name}</h2>
+        async function renderCategorySection(container, path) {
+            // 1. Fetch Items
+            const items = await safeFetchContents(path);
+            if (!items || items.length === 0) return; // Skip empty sections
+
+            // Filter for directories (modules)
+            const folders = items.filter(i => i.type === 'dir');
+            if (folders.length === 0) return;
+
+            // 2. Create Section Header (Derived from Folder Name)
+            // Decode URL (e.g. Tools%20and%20Scripts -> Tools and Scripts)
+            const sectionName = decodeURIComponent(path).replace(/-/g, ' ');
+
+            const sectionHtml = `
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">${sectionName}</h2>
+                        <div class="section-subtitle">${folders.length} Items Found</div>
                     </div>
-                    <div class="card-content">
-                        <p class="card-description">${tool.description}</p>
-                        <div class="card-features">
-                            <h4>Features</h4>
-                            <ul>
-                                ${tool.features.map(feature => `<li>${feature}</li>`).join('')}
-                            </ul>
-                        </div>
+                </div>
+                <div class="grid" id="grid-${path}">
+                    <!-- Cards go here -->
+                </div>
+            `;
+
+            // Append Section Wrapper
+            const sectionWrapper = document.createElement('div');
+            sectionWrapper.innerHTML = sectionHtml;
+            container.appendChild(sectionWrapper);
+
+            // 3. Render Cards in Parallel
+            const grid = document.getElementById(`grid-${path}`);
+
+            const cardPromises = folders.map(async folder => {
+                // Fetch folder contents to check for index.html (Web Artifact)
+                const contents = await safeFetchContents(`${path}/${folder.name}`);
+
+                // Heuristics
+                const hasIndex = contents && contents.some(f => f.name.toLowerCase() === 'index.html');
+                const isWeb = hasIndex;
+
+                // Determine Labels & Badges
+                let typeLabel = 'Resource';
+                let badgeClass = 'badge-script'; // reuse script style for generic
+
+                if (isWeb) {
+                    typeLabel = 'Web App';
+                    badgeClass = 'badge-web';
+                } else if (path.includes('Tools')) {
+                    typeLabel = 'Script/Tool';
+                }
+
+                // Determine Icon
+                let icon = ICONS.default;
+                const nameLower = folder.name.toLowerCase();
+
+                if (path.includes('Guides')) icon = ICONS.document;
+                else {
+                    if (nameLower.includes('email')) icon = ICONS.email;
+                    else if (nameLower.includes('event')) icon = ICONS.forensic;
+                    else if (nameLower.includes('net')) icon = ICONS.network;
+                    else if (isWeb) icon = ICONS.web;
+                }
+
+                // Action URL
+                const launchUrl = isWeb
+                    ? `${path}/${folder.name}/index.html`
+                    : folder.html_url;
+
+                const primaryBtnText = isWeb ? 'Launch' : (path.includes('Guides') ? 'View Files' : 'View Code');
+                const primaryBtnClass = isWeb ? 'btn-primary' : (path.includes('Guides') ? 'btn-outline' : 'btn-primary');
+                const targetAttr = isWeb ? '' : 'target="_blank"'; // Open web apps in same tab? Or new? Let's use same for seamless feel, or new for safety. User didn't specify. Standard is new tab for external. But this is internal. Let's use new tab for now to be safe.
+
+                return `
+                    <div class="card">
+                        <span class="card-badge ${badgeClass}">${typeLabel}</span>
+                        <div class="card-icon">${icon}</div>
+                        <h3>${folder.name.replace(/-/g, ' ')}</h3>
                         <div class="card-footer">
-                            <a href="${tool.path}" class="btn btn-primary">${buttonText}</a>
-                            <a href="${tool.github}" class="btn btn-secondary" target="_blank">GitHub</a>
+                            <a href="${launchUrl}" class="btn ${primaryBtnClass}" ${isWeb ? '' : 'target="_blank"'}>${primaryBtnText}</a>
+                            ${isWeb ? `<a href="${folder.html_url}" class="btn btn-outline" target="_blank">Source</a>` : ''}
                         </div>
                     </div>
+                `;
+            });
+
+            const cards = await Promise.all(cardPromises);
+            grid.innerHTML = cards.join('');
+        }
+
+        // ==========================================
+        // UTILS
+        // ==========================================
+
+        async function safeFetchContents(path) {
+            const CACHE_KEY = `techarsenal_${path}`;
+            const cached = localStorage.getItem(CACHE_KEY);
+
+            // Cache hit (1 hour)
+            if (cached) {
+                const { ts, data } = JSON.parse(cached);
+                if (Date.now() - ts < 3600000) return data;
+            }
+
+            const url = `https://api.github.com/repos/${CONFIG.user}/${CONFIG.repo}/contents/${path}`;
+
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`API Error: ${res.status}`);
+                const data = await res.json();
+
+                localStorage.setItem(CACHE_KEY, JSON.stringify({
+                    ts: Date.now(),
+                    data
+                }));
+
+                return data;
+            } catch (e) {
+                console.error("Fetch failed:", e);
+                return null;
+            }
+        }
+
+        function renderError(container, msg) {
+            container.innerHTML = `
+                <div class="error-state">
+                    <h3>Connection Failed</h3>
+                    <p>${msg}</p>
+                    <p style="font-size:0.8rem; margin-top:10px; opacity:0.7">
+                        If you are opening this file locally (file://), GitHub API may be blocked by CORS.<br>
+                        Please use a local server (VS Code Live Server) or deploy to GitHub Pages.
+                    </p>
                 </div>
             `;
         }
-
-        function renderTools() {
-            if (!toolsData || !toolsData.tools || toolsData.tools.length === 0) {
-                document.getElementById('toolsGrid').innerHTML = `
-                    <div class="error">No tools found in configuration.</div>
-                `;
-                return;
-            }
-            const gridContainer = document.getElementById('toolsGrid');
-            gridContainer.innerHTML = toolsData.tools.map(tool => createToolCard(tool)).join('');
-        }
-
-        function renderFeatures() {
-            if (!toolsData || !toolsData.features) return;
-            
-            const featuresGrid = document.getElementById('featuresGrid');
-            if (!featuresGrid) return;
-            
-            featuresGrid.innerHTML = toolsData.features.map(feature => `
-                <div class="resource-card">
-                    <h3>${feature.icon} ${feature.title}</h3>
-                    <p>${feature.description}</p>
-                </div>
-            `).join('');
-        }
-
-        function renderTopics() {
-            if (!toolsData || !toolsData.topics) return;
-            
-            const topicsContainer = document.getElementById('topicsContainer');
-            if (!topicsContainer) return;
-            
-            topicsContainer.innerHTML = toolsData.topics.map(topic => `<span class="badge">${topic}</span>`).join('');
-        }
-
-        // ===================================
-        // AUTO-DISCOVERY FOR GUIDES & RESOURCES
-        // Automatically fetches ALL files (MD, HTML, etc) from folders without JSON config
-        // ===================================
-        async function loadGuidesAndResources() {
-            try {
-                const githubApiUrl = 'https://api.github.com/repos/AdityaMandage/Tech-Arsenal/contents/Guides%20and%20Resources';
-                const response = await fetch(githubApiUrl);
-                
-                if (!response.ok) return;
-                
-                const items = await response.json();
-                const folders = items.filter(item => item.type === 'dir').sort((a, b) => a.name.localeCompare(b.name));
-                
-                if (folders.length === 0) return;
-                
-                // Fetch all files from all folders
-                const allGuides = [];
-                
-                for (const folder of folders) {
-                    try {
-                        const folderResponse = await fetch(folder.url);
-                        if (!folderResponse.ok) continue;
-                        
-                        const folderContents = await folderResponse.json();
-                        
-                        // Check if folder has index.html
-                        const hasIndexHtml = folderContents.some(file => 
-                            file.type === 'file' && file.name.toLowerCase() === 'index.html'
-                        );
-                        
-                        if (hasIndexHtml) {
-                            // If index.html exists, create ONE card for the folder (page)
-                            allGuides.push({
-                                folderName: folder.name,
-                                fileName: 'index.html',
-                                isPage: true,
-                                isMarkdown: false,
-                                isHtml: true
-                            });
-                        } else {
-                            // Otherwise, list individual markdown files
-                            const files = folderContents.filter(file => 
-                                file.type === 'file' && file.name.toLowerCase().endsWith('.md')
-                            );
-                            
-                            files.forEach(file => {
-                                allGuides.push({
-                                    folderName: folder.name,
-                                    fileName: file.name,
-                                    downloadUrl: file.download_url,
-                                    rawUrl: file.download_url,
-                                    isPage: false,
-                                    isMarkdown: true,
-                                    isHtml: false
-                                });
-                            });
-                        }
-                    } catch (e) {
-                        console.warn(`Could not fetch contents of ${folder.name}:`, e);
-                    }
-                }
-                
-                if (allGuides.length === 0) return;
-                
-                // Create guides section
-                const guidesHtml = allGuides.map(guide => {
-                    let displayName = guide.isPage 
-                        ? guide.folderName 
-                        : guide.fileName.replace(/\.(md|html)$/i, '').replace(/[-_]/g, ' ');
-                    let icon = guide.isPage ? '🌐' : '📄';
-                    let buttonText = guide.isPage ? 'Open Page' : 'Read Guide';
-                    
-                    // Construct proper GitHub Pages URL for HTML pages
-                    let pageUrl = '';
-                    if (guide.isPage) {
-                        // GitHub Pages URL format
-                        pageUrl = `https://adityamandage.github.io/Tech-Arsenal/Guides%20and%20Resources/${encodeURIComponent(guide.folderName)}/`;
-                    } else if (guide.isMarkdown) {
-                        // Markdown - will use modal viewer
-                        pageUrl = `javascript:loadMarkdownGuide('${guide.rawUrl}', '${displayName}', '${guide.folderName}')`;
-                    }
-                    
-                    if (guide.isPage) {
-                        return `
-                            <div class="resource-card">
-                                <h3>${icon} ${displayName}</h3>
-                                <p style="font-size: 0.8rem; color: #999;">Interactive Guide</p>
-                                <br>
-                                <a href="${pageUrl}" target="_blank" class="btn btn-primary" style="margin-top: 10px;">
-                                    ${buttonText}
-                                </a>
-                            </div>
-                        `;
-                    } else {
-                        return `
-                            <div class="resource-card">
-                                <h3>${icon} ${displayName}</h3>
-                                <p style="font-size: 0.8rem; color: #999;">in ${guide.folderName}</p>
-                                <br>
-                                <button class="btn btn-primary" style="margin-top: 10px;" onclick="loadMarkdownGuide('${guide.rawUrl}', '${displayName}', '${guide.folderName}')">
-                                    ${buttonText}
-                                </button>
-                            </div>
-                        `;
-                    }
-                }).join('');
-                
-                // Insert into the guides section (right after tools)
-                const guidesSection = document.getElementById('guidesSection');
-                if (guidesSection) {
-                    guidesSection.innerHTML = `
-                        <h2 class="section-title">📚 Guides & Resources</h2>
-                        <div class="resources-grid">${guidesHtml}</div>
-                    `;
-                }
-            } catch (error) {
-                console.warn('Could not auto-load guides and resources:', error);
-            }
-        }
-
-        // Function to load and display markdown guides
-        async function loadMarkdownGuide(rawUrl, title, folderName) {
-            try {
-                const mdResponse = await fetch(rawUrl);
-                if (!mdResponse.ok) throw new Error('Failed to fetch markdown');
-                
-                const mdContent = await mdResponse.text();
-                
-                // Convert markdown to HTML (simple conversion)
-                const htmlContent = markdownToHtml(mdContent);
-                
-                // Create modal
-                const modal = document.createElement('div');
-                modal.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0,0,0,0.8);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 10000;
-                    padding: 20px;
-                `;
-                
-                const content = document.createElement('div');
-                content.style.cssText = `
-                    background: white;
-                    border-radius: 12px;
-                    max-width: 900px;
-                    width: 100%;
-                    max-height: 90vh;
-                    overflow-y: auto;
-                    padding: 30px;
-                    position: relative;
-                `;
-                
-                const closeBtn = document.createElement('button');
-                closeBtn.innerHTML = '✕';
-                closeBtn.style.cssText = `
-                    position: absolute;
-                    top: 15px;
-                    right: 15px;
-                    background: #f0f0f0;
-                    border: none;
-                    width: 35px;
-                    height: 35px;
-                    border-radius: 50%;
-                    font-size: 20px;
-                    cursor: pointer;
-                    transition: all 0.3s;
-                `;
-                closeBtn.onmouseover = () => closeBtn.style.background = '#ddd';
-                closeBtn.onmouseout = () => closeBtn.style.background = '#f0f0f0';
-                closeBtn.onclick = () => modal.remove();
-                
-                content.appendChild(closeBtn);
-                
-                const titleEl = document.createElement('h1');
-                titleEl.textContent = title;
-                titleEl.style.cssText = 'color: #667eea; margin-bottom: 20px; padding-top: 10px;';
-                content.appendChild(titleEl);
-                
-                const folder = document.createElement('p');
-                folder.textContent = `📁 From: ${folderName}`;
-                folder.style.cssText = 'color: #999; font-size: 0.9rem; margin-bottom: 20px;';
-                content.appendChild(folder);
-                
-                const guideContent = document.createElement('div');
-                guideContent.innerHTML = htmlContent;
-                guideContent.style.cssText = `
-                    line-height: 1.6;
-                    color: #333;
-                    font-size: 1rem;
-                `;
-                guideContent.querySelectorAll('a').forEach(a => a.setAttribute('target', '_blank'));
-                content.appendChild(guideContent);
-                
-                modal.appendChild(content);
-                document.body.appendChild(modal);
-                
-                modal.onclick = (e) => {
-                    if (e.target === modal) modal.remove();
-                };
-                
-            } catch (error) {
-                alert('Could not load guide: ' + error.message);
-            }
-        }
-
-        // Simple markdown to HTML converter
-        function markdownToHtml(md) {
-            let html = md
-                // Code blocks
-                .replace(/```(.*?)\n([\s\S]*?)```/g, '<pre style="background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>$2</code></pre>')
-                // Inline code
-                .replace(/`([^`]+)`/g, '<code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">$1</code>')
-                // Headers
-                .replace(/^### (.*?)$/gm, '<h3 style="color: #667eea; margin-top: 20px; margin-bottom: 10px;">$1</h3>')
-                .replace(/^## (.*?)$/gm, '<h2 style="color: #667eea; margin-top: 25px; margin-bottom: 15px;">$1</h2>')
-                .replace(/^# (.*?)$/gm, '<h1 style="color: #667eea; margin-top: 30px; margin-bottom: 20px;">$1</h1>')
-                // Bold
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                // Italic
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                // Links
-                .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" style="color: #667eea; text-decoration: none;">$1</a>')
-                // Line breaks
-                .replace(/\n\n/g, '</p><p>')
-                .replace(/\n/g, '<br>');
-            
-            return '<p>' + html + '</p>';
-        }
-
-        // Load on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadToolsConfig();
-            loadGuidesAndResources();
-        });
     </script>
 </body>
+
 </html>
+```

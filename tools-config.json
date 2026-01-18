@@ -1,39 +1,7 @@
 {
-  "siteName": "Tech & IT Toolkit",
+  "siteName": "Tech Arsenal",
   "siteDescription": "A Comprehensive Collection of Technology & IT Tools, Resources & Guides",
   "tagline": "For Learning Purposes • Open Source • Community Driven",
-  "tools": [
-    {
-      "id": "winevent-finder",
-      "name": "WinEvent-Finder",
-      "icon": "🔍",
-      "description": "A powerful interactive tool for searching and analyzing Windows Event IDs. Quickly find event codes, understand their meanings, and get security insights.",
-      "path": "Tools%20and%20Scripts/WinEvent-Finder/index.html",
-      "github": "https://github.com/AdityaMandage/Tech-Arsenal/tree/main/Tools%20and%20Scripts/WinEvent-Finder",
-      "features": [
-        "Search Windows Event IDs",
-        "Event descriptions & details",
-        "Fast lookup functionality",
-        "Security insights"
-      ],
-      "type": "web"
-    },
-    {
-      "id": "email-header-analyzer",
-      "name": "Email Header Analyzer",
-      "icon": "📧",
-      "description": "Parse and analyze email headers with geolocation lookups. Extract sender details, routing data, and IP addresses for forensics and security analysis.",
-      "path": "https://github.com/AdityaMandage/Tech-Arsenal/tree/main/Tools%20and%20Scripts/Email%20Header%20Analyzer",
-      "github": "https://github.com/AdityaMandage/Tech-Arsenal/tree/main/Tools%20and%20Scripts/Email%20Header%20Analyzer",
-      "features": [
-        "Parse email headers",
-        "Extract IP addresses",
-        "Geolocation lookups",
-        "Email forensics"
-      ],
-      "type": "python"
-    }
-  ],
   "features": [
     {
       "icon": "🎯",
