@@ -2,7 +2,7 @@
     "name": "TryHackMe Rooms",
     "description": "Curated list of free TryHackMe rooms for learning cybersecurity.",
     "category": "Training",
-    "type": "resource",
+    "type": "web",
     "icon": "🎓",
     "tags": [
         "learning",
